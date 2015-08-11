@@ -277,28 +277,93 @@ dt_imputed2 <- data.table(dt_imputed, dayofweek)
 # Reset regional settings
 # Sys.setlocale("LC_TIME", "Norwegian")
 
+#_________Calculations on weekdays
+# Average steps per interval for each weekday
 dt_weekdaypattern <- data.table(sqldf("SELECT interval, avg(steps) as steps, dayofweek 
                             FROM dt_imputed2
                             WHERE dayofweek = 'weekday'
                             Group by interval"))
 
-dt_weekendpattern <- data.table(sqldf("SELECT interval, avg(steps) as steps, dayofweek
+# Find max interval with corresponding value for weekdays
+maxsteps_wday = max(dt_weekdaypattern$steps)
+
+# Look up the corresponding interval for the max number of steps for weekdays
+maxint_wday <- sqldf("SELECT interval, max(steps)
+        FROM dt_weekdaypattern")
+
+# Make new variables for dt_weekdaypattern in dt_weekdaypattern, indicating interval with max value
+remove(intvmax)
+stepmax <- 1:nrow(dt_weekdaypattern)
+intvmax <- 1:(length(stepmax))
+maxintv <- maxint_wday$interval[1]
+
+for(i in 1:nrow(dt_weekdaypattern)) {
+    if (dt_weekdaypattern$steps[i] == maxsteps_wday) {
+        stepmax[i] <- paste("Maximum = ", maxsteps_wday, " steps at interval ", maxintv, sep = "")
+        intvmax[i] <- maxintv
+    }else{
+        stepmax[i] <- NA
+        intvmax[i] <- NA
+    }
+}
+
+dt_weekdaypattern <- data.table(dt_weekdaypattern, intvmax, stepmax)
+
+
+#_________Calculations on weekends
+# Average steps per interval for each weekend
+dt_weekendpattern <- data.table(sqldf("SELECT interval, avg(steps) as steps, dayofweek 
                             FROM dt_imputed2
                             WHERE dayofweek = 'weekend'
                             Group by interval"))
 
-dt_weekpatterns <- data.frame(sqldf("SELECT * from dt_weekdaypattern 
+# Find max interval with corresponding value for weekends
+maxsteps_wend = max(dt_weekendpattern$steps)
+
+# Look up the corresponding interval for the max number of steps for weekends
+maxint_wend <- sqldf("SELECT interval, max(steps)
+        FROM dt_weekendpattern")
+
+# Make new variables for dt_weekendpattern in dt_weekendpattern, indicating interval with max value
+remove(intvmax)
+stepmax <- 1:nrow(dt_weekendpattern)
+intvmax <- 1:(length(stepmax))
+maxintv <- maxint_wend$interval[1]
+
+for(i in 1:nrow(dt_weekendpattern)) {
+    if (dt_weekendpattern$steps[i] == maxsteps_wend) {
+        stepmax[i] <- paste("Maximum = ", maxsteps_wend, " steps at interval ", maxintv, sep = "")
+        intvmax[i] <- maxintv
+    }else{
+        stepmax[i] <- NA
+        intvmax[i] <- NA
+    }
+}
+
+dt_weekendpattern <- data.table(dt_weekendpattern, intvmax, stepmax)
+
+# Union dt_weekdaypattern and dt_weekendpattern into dt_weekpatterns
+# dt_weekendpattern <- data.table(dt_weekendpattern, stepmax)
+
+dt_weekpatterns <- data.table(sqldf("SELECT * from dt_weekdaypattern 
                             UNION ALL
                               SELECT * from dt_weekendpattern
                             ORDER BY interval"))
 
+# Panel plot for average steps per interval, distiingueshed by weekday or weekend
 p3 <- ggplot(dt_weekpatterns, aes(interval, steps)) + geom_line(colour = "blue")
 p3 <- p3 + theme_classic()
 p3 <- p3 + facet_grid(dayofweek ~ .)
+
+p3 <- p3 + geom_text(aes(x = interval, y = steps, label = stepmax, group=NULL),data=dt_weekpatterns, hjust = -0.2)
+p3 <- p3 + geom_point(data=subset(dt_weekpatterns, !is.na(stepmax)), colour = "red")
+
 p3
 ```
 
 ![](PA1_template_files/figure-html/Analysis_5-1.png) 
+
+Comparing the pattern for average number of steps for each interval for weekdays versus weekends shows that the maximum number of steps is quite a bit lower and appears later in the day on weekends. In other words, you tend to get up later in the weekends and run around less. Sounds sweet.
 
 
 ```r
