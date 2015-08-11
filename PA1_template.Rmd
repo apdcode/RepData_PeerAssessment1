@@ -296,7 +296,7 @@ dt_dailysteps2 <- data.table(dt_dailysteps, dayofweek)
 
 # Reset regional settings
 Sys.setlocale("LC_TIME", "Norwegian")
-
+ 
 
 px3 <- ggplot(mtcars, aes(mpg, wt)) + geom_point()
 px3
@@ -312,7 +312,8 @@ p3 <- ggplot(dt_dailysteps2, aes(mpg, wt)) + geom_point()
 ```{r finals, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 
 #___1.0___  Make md file
-#setwd("C:/repos_github/coursera/repres")
+#setwd("C:/repos_github/coursera/RepData_PeerAssessment1")
+#getwd()
 #library(knitr)
 #knit('PA1_template.Rmd')
 ```

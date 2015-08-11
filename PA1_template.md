@@ -233,8 +233,6 @@ setwd("C:/repos_github/coursera/repres")
 ggsave(filename = "Histogram Number of Steps no missing values.pdf", plot = h1)
 ```
 
-![plot of chunk Analysis_3](figure/Analysis_3-1.png) 
-
 There are a total of 2304 missing values in the original dataset, 
 all of which are missing observations for steps for given dates and intervals.
 
@@ -307,7 +305,8 @@ p3 <- ggplot(dt_dailysteps2, aes(mpg, wt)) + geom_point()
 
 ```r
 #___1.0___  Make md file
-#setwd("C:/repos_github/coursera/repres")
+#setwd("C:/repos_github/coursera/RepData_PeerAssessment1")
+#getwd()
 #library(knitr)
 #knit('PA1_template.Rmd')
 ```
