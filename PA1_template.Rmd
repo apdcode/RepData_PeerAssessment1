@@ -1,11 +1,12 @@
 ---
-title: "The Quantified Self"
+title: "PA1"
 header-includes: \usepackage{caption}
-output: pdf_document
+output:
+  html_document:
+    keep_md: true
 fig_caption: no
 ---
 
-### R settings and packages
 ```{r Settingz, echo = FALSE, eval = TRUE, results = "hide", warning = FALSE, message = FALSE}
 
 #___0.1___Clear workspace
@@ -295,7 +296,7 @@ for(i in 1:length(dt_imputed$date)) {
 dt_imputed2 <- data.table(dt_imputed, dayofweek)
 
 # Reset regional settings
-Sys.setlocale("LC_TIME", "Norwegian")
+# Sys.setlocale("LC_TIME", "Norwegian")
 
 dt_weekdaypattern <- data.table(sqldf("SELECT interval, avg(steps) as steps, dayofweek 
                             FROM dt_imputed2
@@ -307,41 +308,18 @@ dt_weekendpattern <- data.table(sqldf("SELECT interval, avg(steps) as steps, day
                             WHERE dayofweek = 'weekend'
                             Group by interval"))
 
-a7s <- sqldf("select * from a5s union all select * from a6s")
-
 dt_weekpatterns <- data.frame(sqldf("SELECT * from dt_weekdaypattern 
                             UNION ALL
                               SELECT * from dt_weekendpattern
-                         ORDER BY interval"))
+                            ORDER BY interval"))
 
-
-px3 <- ggplot(mtcars, aes(mpg, wt)) + geom_point()
-px3
-
-px3 <- px3 + facet_grid(cyl ~ .)
-
-p3 <- ggplot(dt_imputed, aes(interval, steps)) + geom_line()
+p3 <- ggplot(dt_weekpatterns, aes(interval, steps)) + geom_line(colour = "blue")
+p3 <- p3 + theme_classic()
+p3 <- p3 + facet_grid(dayofweek ~ .)
 p3
-
-
-p <- ggplot(data = dt_imputed, aes(x = date, y = stepsum)) + geom_point()
-p <- p + facet_grid(dayofweek ~ .)
-
-p <- p + facet_wrap(~dayofweek)
-p
-
-
-qplot(date, stepsum, data=dt_dailysteps2, geom="line") + facet_grid(dayofweek ~ .)
-
-
-qplot(x, y, data=dt_dailysteps2, geom="line") + facet_grid(dayofweek ~ .)
-
-
-qplot(dt_dailysteps2,aes(x = dt_dailysteps2$date, y = dt_dailysteps2$stepsum), geom="line") + facet_grid(dt_dailysteps2$dayofweek ~ .)
 
 ```
 
-### Final touch
 ```{r finals, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 
 #___1.0___  Make md file

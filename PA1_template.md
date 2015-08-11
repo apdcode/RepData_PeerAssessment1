@@ -1,11 +1,5 @@
----
-title: "The Quantified Self"
-header-includes: \usepackage{caption}
-output: pdf_document
-fig_caption: no
----
+# PA1
 
-### R settings and packages
 
 
 ### Part 1 - Loading and preprocessing the data
@@ -60,7 +54,7 @@ h1 <- h1 + ylim(0, 14)
 plot(h1)
 ```
 
-![plot of chunk Analysis_1](figure/Analysis_1-1.png) 
+![](PA1_template_files/figure-html/Analysis_1-1.png) 
 
 ```r
 #setwd("C:/repos_github/coursera/repres")
@@ -126,7 +120,7 @@ p1 <- p1 + theme(plot.title = element_text(lineheight=.8, face="bold"))
 p1
 ```
 
-![plot of chunk Analysis_2](figure/Analysis_2-1.png) 
+![](PA1_template_files/figure-html/Analysis_2-1.png) 
 
 The interval which contains the maximum average steps per day, is 835.
 
@@ -243,7 +237,7 @@ Below is a histogram showing the distribution of steps after missing values have
 plot(h2)
 ```
 
-![plot of chunk Analysis_31](figure/Analysis_31-1.png) 
+![](PA1_template_files/figure-html/Analysis_31-1.png) 
 
 ### Part 5 - Are there differences in activity patterns between weekdays and weekends?
 
@@ -253,7 +247,7 @@ plot(h2)
 #         is a weekday or weekend day.
 
 # Make variables for factor categories
-dayofweek <-1:length(dt_dailysteps$date)
+dayofweek <- 1:nrow(dt_imputed)
 
 # Factor categories
 wday <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
@@ -268,8 +262,8 @@ Sys.setlocale("LC_TIME", "English")
 
 ```r
 # Distribute factor categories
-for(i in 1:length(dt_dailysteps$date)) {
-    cday <- weekdays(as.Date(dt_dailysteps$date[i]))
+for(i in 1:length(dt_imputed$date)) {
+    cday <- weekdays(as.Date(dt_imputed$date[i]))
     if (cday %in% wday) {
         dayofweek[i] <- "weekday"
     }else{
@@ -278,30 +272,34 @@ for(i in 1:length(dt_dailysteps$date)) {
 }
 
 # Add the factor variables to dt_avgsteps in a new table
-dt_dailysteps2 <- data.table(dt_dailysteps, dayofweek)
+dt_imputed2 <- data.table(dt_imputed, dayofweek)
 
 # Reset regional settings
-Sys.setlocale("LC_TIME", "Norwegian")
+# Sys.setlocale("LC_TIME", "Norwegian")
+
+dt_weekdaypattern <- data.table(sqldf("SELECT interval, avg(steps) as steps, dayofweek 
+                            FROM dt_imputed2
+                            WHERE dayofweek = 'weekday'
+                            Group by interval"))
+
+dt_weekendpattern <- data.table(sqldf("SELECT interval, avg(steps) as steps, dayofweek
+                            FROM dt_imputed2
+                            WHERE dayofweek = 'weekend'
+                            Group by interval"))
+
+dt_weekpatterns <- data.frame(sqldf("SELECT * from dt_weekdaypattern 
+                            UNION ALL
+                              SELECT * from dt_weekendpattern
+                            ORDER BY interval"))
+
+p3 <- ggplot(dt_weekpatterns, aes(interval, steps)) + geom_line(colour = "blue")
+p3 <- p3 + theme_classic()
+p3 <- p3 + facet_grid(dayofweek ~ .)
+p3
 ```
 
-```
-## [1] "Norwegian (Bokmål)_Norway.1252"
-```
+![](PA1_template_files/figure-html/Analysis_5-1.png) 
 
-```r
-px3 <- ggplot(mtcars, aes(mpg, wt)) + geom_point()
-px3
-```
-
-![plot of chunk Analysis_5](figure/Analysis_5-1.png) 
-
-```r
-px3 <- px3 + facet_grid(cyl ~ .)
-
-p3 <- ggplot(dt_dailysteps2, aes(mpg, wt)) + geom_point()
-```
-
-### Final touch
 
 ```r
 #___1.0___  Make md file
