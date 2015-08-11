@@ -273,7 +273,7 @@ plot(h2)
 #         is a weekday or weekend day.
 
 # Make variables for factor categories
-dayofweek <-1:length(dt_dailysteps$date)
+dayofweek <- 1:nrow(dt_imputed)
 
 # Factor categories
 wday <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
@@ -282,8 +282,8 @@ wday <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
 Sys.setlocale("LC_TIME", "English")
 
 # Distribute factor categories
-for(i in 1:length(dt_dailysteps$date)) {
-    cday <- weekdays(as.Date(dt_dailysteps$date[i]))
+for(i in 1:length(dt_imputed$date)) {
+    cday <- weekdays(as.Date(dt_imputed$date[i]))
     if (cday %in% wday) {
         dayofweek[i] <- "weekday"
     }else{
@@ -292,22 +292,39 @@ for(i in 1:length(dt_dailysteps$date)) {
 }
 
 # Add the factor variables to dt_avgsteps in a new table
-dt_dailysteps2 <- data.table(dt_dailysteps, dayofweek)
+dt_imputed2 <- data.table(dt_imputed, dayofweek)
 
 # Reset regional settings
 Sys.setlocale("LC_TIME", "Norwegian")
- 
+
+dt_weekdaypattern <- data.table(sqldf("SELECT interval, avg(steps) as steps, dayofweek 
+                            FROM dt_imputed2
+                            WHERE dayofweek = 'weekday'
+                            Group by interval"))
+
+dt_weekendpattern <- data.table(sqldf("SELECT interval, avg(steps) as steps, dayofweek
+                            FROM dt_imputed2
+                            WHERE dayofweek = 'weekend'
+                            Group by interval"))
+
+a7s <- sqldf("select * from a5s union all select * from a6s")
+
+dt_weekpatterns <- data.frame(sqldf("SELECT * from dt_weekdaypattern 
+                            UNION ALL
+                              SELECT * from dt_weekendpattern
+                         ORDER BY interval"))
+
 
 px3 <- ggplot(mtcars, aes(mpg, wt)) + geom_point()
 px3
 
 px3 <- px3 + facet_grid(cyl ~ .)
 
-p3 <- ggplot(dt_dailysteps2, aes(stepsum, dayofweek)) + geom_line()
+p3 <- ggplot(dt_imputed, aes(interval, steps)) + geom_line()
 p3
 
 
-p <- ggplot(data = dt_dailysteps2, aes(x = date, y = stepsum)) + geom_point()
+p <- ggplot(data = dt_imputed, aes(x = date, y = stepsum)) + geom_point()
 p <- p + facet_grid(dayofweek ~ .)
 
 p <- p + facet_wrap(~dayofweek)
