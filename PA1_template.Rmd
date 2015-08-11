@@ -303,8 +303,24 @@ px3
 
 px3 <- px3 + facet_grid(cyl ~ .)
 
-p3 <- ggplot(dt_dailysteps2, aes(mpg, wt)) + geom_point()
+p3 <- ggplot(dt_dailysteps2, aes(stepsum, dayofweek)) + geom_line()
+p3
 
+
+p <- ggplot(data = dt_dailysteps2, aes(x = date, y = stepsum)) + geom_point()
+p <- p + facet_grid(dayofweek ~ .)
+
+p <- p + facet_wrap(~dayofweek)
+p
+
+
+qplot(date, stepsum, data=dt_dailysteps2, geom="line") + facet_grid(dayofweek ~ .)
+
+
+qplot(x, y, data=dt_dailysteps2, geom="line") + facet_grid(dayofweek ~ .)
+
+
+qplot(dt_dailysteps2,aes(x = dt_dailysteps2$date, y = dt_dailysteps2$stepsum), geom="line") + facet_grid(dt_dailysteps2$dayofweek ~ .)
 
 ```
 
