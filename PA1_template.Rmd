@@ -7,7 +7,7 @@ output:
 fig_caption: no
 ---
 
-```{r Settingz, echo = FALSE, eval = TRUE, results = "hide", warning = FALSE, message = FALSE}
+```{r Settings, echo = FALSE, eval = TRUE, results = "hide", warning = FALSE, message = FALSE}
 
 #___0.1___Clear workspace
 rm(list=ls())
@@ -85,7 +85,7 @@ h1 <- h1 + theme_classic()
 h1 <- h1 + ggtitle("Daily steps for each interval") + xlab("steps")
 h1 <- h1 + theme(plot.title = element_text(lineheight=.8, face="bold"))
 h1 <- h1 + ylim(0, 14)
-plot(h1)
+
 #setwd("C:/repos_github/coursera/repres")
 #ggsave(filename = "Histogram Number of Steps.pdf", plot = h1)
 
@@ -94,11 +94,18 @@ plot(h1)
 nsteps <- sum(dt_dailysteps$steps)
 avgsteps <- mean(dt_dailysteps$stepsum)
 medsteps <- median(dt_dailysteps$stepsum)
-
-
+# h1 <- h1 + geom_vline(xintercept = avgsteps, labels = "mean", show_guide = TRUE, color = "green")
+# h1 <- h1 + geom_vline(xintercept = medsteps, labels = "mean", show_guide = TRUE, color = "red")
+# h1
 ```
 
-The average number of steps taken per day, without removing missing values, is `r nsteps`. The mean and median for the same category is 10788.19  and 10765.
+```{r Analysis_1_plot1, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
+  plot(h1)
+```
+
+The total number of steps taken in this dataset, is `r nsteps`. 
+When accumulating all intervals per day, which is what the assignment asks for, 
+the mean and median number of steps are 10766.19  and 10765, respectively.
 
 ### Part 3 - What is the average daily pattern?
 ```{r Analysis_2, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
@@ -153,10 +160,11 @@ p1 <- p1 + ylim(0, 260)
 p1
 ```
 
-The interval which contains the maximum average steps per day, is `r maxint$interval[1]`.
+The 5-minute interval which contains the maximum average steps per day, is `r maxint$interval[1]`.
+The average number of steps taken per day is 206.
 
 ### Part 4.1 - Imputing Missing values
-```{r Analysis_3, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
+```{r Analysis_41, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 
 # OBJECTIVE:  Replace missing step data for all intervals with
 #             average number of stepds per day for those observations
@@ -272,20 +280,27 @@ plot(h2)
 Comparing the histogram in figure 3 with the histogram in figure 1 shows that the imputed dataset leads to an increased number of observations around at the center of the distribution. Let us take a quick look at why this happens by taking the difference between each observation in the imputed dataset and another table where all missing values are replacd by zero.
 
 ### Part 4b - Imputing Missing values, a closer look at the implications.
-```{r Analysis_3, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
+```{r Analysis_4b, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 
 # Make a table of the origninal dataset where all missing values for steps are replaced by 0.
-dt_initialNa0 <- dt_initial
-dt_initialNa0[is.na(dt_initialNa0)] <- 0
-
+    dt_initialNa0 <- dt_initial
+    dt_initialNa0[is.na(dt_initialNa0)] <- 0
+  
 dt_diff <- (dt_imputed - dt_initialNa0)
-dt_diff$date <- dt_initial$date
-sum(dt_diff$steps)
+    dt_diff$date <- dt_initial$date
+    dt_diff$interval <- dt_initial$interval
+    sum(dt_diff$steps)
 
 dt_diffdays <- data.table(sqldf("SELECT sum(steps) as stepsum, date 
                                   FROM dt_diff
                                   Group by date"))
 sum(dt_diffdays$stepsum)
+
+dt_diffdays <- data.table(sqldf("SELECT sum(steps) as stepsum, date 
+                                  FROM dt_diff
+                                  Group by date"))
+sum(dt_diffdays$stepsum)
+
 
 # Make datatable of dt_diffdays with all zeros removed
 # In other words, alld days with no effects from the imputing process are disregarded.
@@ -297,9 +312,11 @@ dt_diffdaysNo0
 nrow(dt_diffdaysNo0)
 ```
 
-The previous table shows the sum of the steps that have been replaced where dates have missing values for the number of steps.
-The fact that the sum of 10641 is equal for all days reveals an interesting detail about the dataset. It turns out that all dates with missing values, has missing values for all intervals, and that there is no missing interval for all dates contained in the dataset.
-This means that it would not matter much if the imputing process replaced missing values for each and every interval, or for each date.
+The previous table shows the sum of the steps that have been added to the dataset due to missing values.
+The fact that the sum of 10641 is equal for all days reveals an interesting detail. 
+It turns out that all dates with missing values, have missing values for all intervals, 
+and that there is no missing interval for all dates contained in the dataset.
+This means that it would not matter much if the imputing process replaced missing values for each and every interval, or for each date only.
   
 ### Part 5 - Are there differences in activity patterns between weekdays and weekends?
 ```{r Analysis_5, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
@@ -432,3 +449,29 @@ Comparing the pattern for average number of steps for each interval for weekdays
 #library(knitr)
 #knit('PA1_template.Rmd')
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
