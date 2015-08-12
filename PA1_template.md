@@ -1,4 +1,4 @@
-# PA1
+# Reproducible Research - Peer Assigment 1
 
 
 
@@ -49,7 +49,8 @@ remove(dt_dailystepsDT)
 h1 <- ggplot(data=dt_dailysteps, aes(dt_dailysteps$stepsum)) 
 h1 <- h1 + geom_histogram(colour = "blue", fill = "grey")
 h1 <- h1 + theme_classic()
-h1 <- h1 + ggtitle("Total number of steps per day") + xlab("steps")
+h1 <- h1 + ggtitle("Daily steps for each interval") + xlab("steps")
+h1 <- h1 + theme(plot.title = element_text(lineheight=.8, face="bold"))
 h1 <- h1 + ylim(0, 14)
 plot(h1)
 ```
@@ -94,6 +95,7 @@ dt_dailypattern <- data.table(dt_dailypattern, idx1)
 p1 <- ggplot(dt_dailypattern, aes((interval), steps))
 p1 <- p1 + geom_line(colour = "blue") + theme_classic() + 
       ggtitle("Daily pattern by 5 minute interval") + xlab("interval")
+p1 <- p1 + theme(plot.title = element_text(lineheight=.8, face="bold"))
 
 #___3.2___Which 5-minute interval, on average across all the days in the dataset, 
 #         contains the maximum number of steps?
@@ -357,6 +359,9 @@ p3 <- p3 + facet_grid(dayofweek ~ .)
 
 p3 <- p3 + geom_text(aes(x = interval, y = steps, label = stepmax, group=NULL),data=dt_weekpatterns, hjust = -0.2)
 p3 <- p3 + geom_point(data=subset(dt_weekpatterns, !is.na(stepmax)), colour = "red")
+
+p3 <- p3 + ggtitle("Daily pattern by 5 minute interval - Weekdays vs Weekend") 
+p3 <- p3 + theme(plot.title = element_text(lineheight=.8, face="bold"))
 
 p3
 ```
