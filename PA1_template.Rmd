@@ -56,7 +56,7 @@ naRemoved <- nrow(dt_initial) - nrow(dt_initialNaNo)
 
 ```
 
-### Part 2 - What is the mean total number of steps taken per day?
+## Part 2 - What is the mean total number of steps taken per day?
 ```{r Analysis_1, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 
 #___2.1___Calculate the total number of steps taken per day
@@ -107,7 +107,7 @@ The total number of steps taken in this dataset, is `r nsteps`.
 When accumulating all intervals per day, which is what the assignment asks for, 
 the mean and median number of steps are 10766.19  and 10765, respectively.
 
-### Part 3 - What is the average daily pattern?
+## Part 3 - What is the average daily pattern?
 ```{r Analysis_2, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 
 #___3.1___Make a time series plot  of the 5 minute intervals averaged accross all days.
@@ -152,18 +152,25 @@ p1 <- p1 + geom_point(data = subset(dt_dailypattern, interval == maxint$interval
                       colour = "red")
 p1 <- p1 + geom_text(data = subset(dt_dailypattern, interval == maxint$interval[1]),
                       aes(x = interval,y = steps, hjust = -0.01
-                          , label = paste("max = ",dailymax, "steps for interval",
+                          , label = paste("max = ",dailymax, "Figure 2 - steps for interval",
                                           maxint[1,1])))
 # Plot the plot
 p1 <- p1 + theme(plot.title = element_text(lineheight=.8, face="bold"))
 p1 <- p1 + ylim(0, 260)
+
+```
+
+
+### 3.1 - Time Series plot
+```{r P31, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 p1
 ```
 
+### 3.2 Average and median steps per day
 The 5-minute interval which contains the maximum average steps per day, is `r maxint$interval[1]`.
 The average number of steps taken per day is 206.
 
-### Part 4.1 - Imputing Missing values
+## Part 4.1 - Imputing Missing values
 ```{r Analysis_41, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 
 # OBJECTIVE:  Replace missing step data for all intervals with
