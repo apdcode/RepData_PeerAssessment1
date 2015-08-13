@@ -160,13 +160,11 @@ tb1
 
 ### 3 - What is the average daily pattern?
 #### 3.1 - Make a time series plot of the 5 minute intervals averaged accross all days.
+Again, it is convenent to transform the original data. Here, the data is stored as an average for each interval accross all observed days in tha data table dt_dailypattern.
 
 ```r
-#___3.1___Make a time series plot of the 5 minute intervals averaged accross all days.
-#         Again, it is convenent to transform the original data.
-#         Here, the data is stored as an average for each interval 
-#         accross all observed days
-#         in tha data table dt_dailypattern.
+#___3.1___Make a time series plot 
+
 
 # Data transformation
 dt_dailypattern <- (sqldf("SELECT interval, avg(steps) as steps 
@@ -174,12 +172,12 @@ dt_dailypattern <- (sqldf("SELECT interval, avg(steps) as steps
                             Group by interval"))
 dt_dailypattern <- data.table(dt_dailypattern)
 
-# The next step adds an index to dt_dailypattern for charting purposes.
 # Using the time intervals on a continuos x-axis results in an uneven
 # time series due to the jumps between, for example, 955 and 1000.
 
 idx1 <- 1:nrow(dt_dailypattern)
-dt_dailypattern <- data.table(dt_dailypattern, idx1)
+dt_dailypattern <- data.table(dt_dailypattern)
+numberofintervals <- nrow(dt_dailypattern)
 
 # The plot, step 1
 p1 <- ggplot(dt_dailypattern, aes((interval), steps))
@@ -208,10 +206,37 @@ p1 <- p1 + geom_text(data = subset(dt_dailypattern, interval == maxint$interval[
 p1 <- p1 + theme(plot.title = element_text(lineheight=.8, face="bold"))
 p1 <- p1 + ggtitle("Figure 2 - Daily steps for each interval") + xlab("steps")
 p1 <- p1 + ylim(0, 260)
+# plot(p1)
+```
+
+The table below shows the results for the data munging in this part of the assignment. Here, we have taken the average for each interval accross all observed days with no missing values. There's a total of 288. The first and last 5 intervals are shown in the table.
+
+```r
+dt_dailypattern
+```
+
+```
+##      interval steps
+##   1:        0     1
+##   2:        5     0
+##   3:       10     0
+##   4:       15     0
+##   5:       20     0
+##  ---               
+## 284:     2335     4
+## 285:     2340     3
+## 286:     2345     0
+## 287:     2350     0
+## 288:     2355     1
+```
+
+The following figure shows a plot from the previous table.
+
+```r
 plot(p1)
 ```
 
-![](PA1_template_files/figure-html/Part 3.1-1.png) 
+![](PA1_template_files/figure-html/Part 3.1 Plot-1.png) 
 
 #### 3.2 Average and median steps per day
 
@@ -226,8 +251,7 @@ maxsteps = max(dt_dailypattern$steps)
 maxint <- sqldf("SELECT interval, max(steps)
                   FROM dt_dailypattern")
 ```
-The 5-minute interval which contains the maximum average steps per day, is **835**.
-The average number of steps taken per day during this interval is **206**.
+The 5-minute interval which contains the maximum average steps per day, is **835**. The average number of steps taken per day during this interval is **206**.
 
 ### 4 - Imputing Missing values
 #### 4.1 - Calculate and report the total number of missing values

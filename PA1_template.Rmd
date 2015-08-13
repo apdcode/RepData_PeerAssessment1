@@ -154,7 +154,7 @@ tb1
 
 ### 3 - What is the average daily pattern?
 #### 3.1 - Make a time series plot of the 5 minute intervals averaged accross all days.
-Again, it is convenent to transform the original data. Here, the data is stored as an average for each interval accross all observed days in tha data table dt_dailypattern.
+Again, it is convenent to transform the original data. Here, the data is stored as an average for each interval accross all observed days in the data table dt_dailypattern.
 ```{r Part 3.1, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 
 #___3.1___Make a time series plot 
@@ -166,12 +166,11 @@ dt_dailypattern <- (sqldf("SELECT interval, avg(steps) as steps
                             Group by interval"))
 dt_dailypattern <- data.table(dt_dailypattern)
 
-# The next step adds an index to dt_dailypattern for charting purposes.
 # Using the time intervals on a continuos x-axis results in an uneven
 # time series due to the jumps between, for example, 955 and 1000.
 
 idx1 <- 1:nrow(dt_dailypattern)
-dt_dailypattern <- data.table(dt_dailypattern, idx1)
+dt_dailypattern <- data.table(dt_dailypattern)
 numberofintervals <- nrow(dt_dailypattern)
 
 # The plot, step 1
@@ -204,7 +203,7 @@ p1 <- p1 + ylim(0, 260)
 # plot(p1)
 ```
 
-The table below shows the results for the data munging in this part of the assignment. Here, we have taken the average for each interval accross all observed days with no missing values. There's a total of `r numberofintervals`. The first 5 are shown in the table
+The table below shows the results for the data munging in this part of the assignment. Here, we have taken the average for each interval accross all observed days with no missing values. There's a total of `r numberofintervals` intervals. The first and last 5 intervals are shown in the table.
 ```{r Part 3.1 Table, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 dt_dailypattern
 ```
@@ -214,11 +213,10 @@ The following figure shows a plot from the previous table.
 plot(p1)
 ```
 
-#### 3.2 Average and median steps per day
+#### 3.2 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 ```{r Part 3.2, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 
-#___3.2___Which 5-minute interval, on average across all the days in the dataset, 
-#         contains the maximum number of steps?
+#___3.2___5 minute interval that contains the maximum number of steps?
 
 # Find interval with max steps
 maxsteps = max(dt_dailypattern$steps)
