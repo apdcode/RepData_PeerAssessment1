@@ -154,13 +154,11 @@ tb1
 
 ### 3 - What is the average daily pattern?
 #### 3.1 - Make a time series plot of the 5 minute intervals averaged accross all days.
+Again, it is convenent to transform the original data. Here, the data is stored as an average for each interval accross all observed days in tha data table dt_dailypattern.
 ```{r Part 3.1, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 
-#___3.1___Make a time series plot of the 5 minute intervals averaged accross all days.
-#         Again, it is convenent to transform the original data.
-#         Here, the data is stored as an average for each interval 
-#         accross all observed days
-#         in tha data table dt_dailypattern.
+#___3.1___Make a time series plot 
+
 
 # Data transformation
 dt_dailypattern <- (sqldf("SELECT interval, avg(steps) as steps 
@@ -174,6 +172,7 @@ dt_dailypattern <- data.table(dt_dailypattern)
 
 idx1 <- 1:nrow(dt_dailypattern)
 dt_dailypattern <- data.table(dt_dailypattern, idx1)
+numberofintervals <- nrow(dt_dailypattern)
 
 # The plot, step 1
 p1 <- ggplot(dt_dailypattern, aes((interval), steps))
@@ -202,6 +201,16 @@ p1 <- p1 + geom_text(data = subset(dt_dailypattern, interval == maxint$interval[
 p1 <- p1 + theme(plot.title = element_text(lineheight=.8, face="bold"))
 p1 <- p1 + ggtitle("Figure 2 - Daily steps for each interval") + xlab("steps")
 p1 <- p1 + ylim(0, 260)
+# plot(p1)
+```
+
+The table below shows the results for the data munging in this part of the assignment. Here, we have taken the average for each interval accross all observed days with no missing values. There's a total of `r numberofintervals`. The first 5 are shown in the table
+```{r Part 3.1 Table, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
+dt_dailypattern
+```
+
+The following figure shows a plot from the previous table.
+```{r Part 3.1 Plot, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 plot(p1)
 ```
 
@@ -219,8 +228,7 @@ maxint <- sqldf("SELECT interval, max(steps)
                   FROM dt_dailypattern")
 
 ```
-The 5-minute interval which contains the maximum average steps per day, is **`r maxint$interval[1]`**.
-The average number of steps taken per day during this interval is **206**.
+The 5-minute interval which contains the maximum average steps per day, is **`r maxint$interval[1]`**. The average number of steps taken per day during this interval is **206**.
 
 ### 4 - Imputing Missing values
 #### 4.1 - Calculate and report the total number of missing values
