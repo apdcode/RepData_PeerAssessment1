@@ -245,12 +245,10 @@ Checking for missing values in each column using is.na() and sapply reveals that
 
 #### 4.2 - Devise a strategy for filling in all of the missing values in the dataset
 ```{r Analysis_4.2, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
-#___4.2___Devise a strategy for filling in all of the missing values in the dataset
-#         There are a total of 2304 missing values in the original dataset, 
-#         all of which are missing observations for steps for given dates and intervals.
-#         The missing values will be replaced by the average number of steps
-#         for the according interval
+#___4.2___ Devise a strategy for filling in all of the missing values in the dataset
 
+# Make a data table in which missing values will be raplaced.
+dt_imputed <- dt_initial
 ```
 
 It would be pretty straight forward to replace all missing values with the average or median step for each day. It's a bit more challenging to do the same for each and every interval, so this is what I'm going to do. There are surely many ways to do this, perhaps most efficiently in dplyr. I'm going to brute force the whole process using a nested For Loop. The following code loops through the table **dt_imputed**. For each missing value, the code loops through the table **avgsteps**, finds the corresponding step count, and writes it to the table **dt_imputed**.
@@ -259,15 +257,6 @@ It would be pretty straight forward to replace all missing values with the avera
 #### 4.3 - Create a new dataset that is equal to the original dataset but with the missing data filled in.
 ```{r Analysis_4.3, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 #___4.3___Create a new dataset that is equal to the original dataset 
-#         but with the missing data filled in.
-#         There are surely many ways to do this, perhaps most efficiently in dplyr.
-#         I'm going to brute force the whole process using a nested For Loop.
-#         The following code loops through the table dt_imputed.
-#         For each missing value, the code loops through the table dt_avgsteps, finds
-#         the corresponding step count, and writes it to the table dt_imputed.
-
-# Make a data table in which missing values will be raplaced.
-dt_imputed <- dt_initial
 
 # Make a data table that contains daily averages for all intervals
 dt_avgsteps <- (sqldf("SELECT interval, avg(steps) as steps 
