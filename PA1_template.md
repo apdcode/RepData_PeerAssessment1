@@ -2,9 +2,9 @@
 
 
 
-## Part 1 - Loading and preprocessing the data
+### Part 1 - Loading and preprocessing the data
 
-### 1.1 - Load the data
+#### 1.1 - Load the data
 The data is loaded into a data table using **read.table** and **data.table**
 The following chunk shows how it's done.
 
@@ -85,15 +85,13 @@ h1 <- h1 + theme_classic()
 h1 <- h1 + ggtitle("Figure 1 - Daily steps for each interval") + xlab("steps")
 h1 <- h1 + theme(plot.title = element_text(lineheight=.8, face="bold"))
 h1 <- h1 + ylim(0, 14)
+#plot(h1)
+#setwd("C:/repos_github/coursera/repres")
+#ggsave(filename = "Histogram Number of Steps.pdf", plot = h1)
 plot(h1)
 ```
 
 ![](PA1_template_files/figure-html/Part 2.2 - Histogram-1.png) 
-
-```r
-#setwd("C:/repos_github/coursera/repres")
-#ggsave(filename = "Histogram Number of Steps.pdf", plot = h1)
-```
 
 ### 2.3 - Calculate and report the mean and median of the total number of steps taken per day
 
@@ -406,8 +404,8 @@ It turns out that all dates with missing values, have missing values for all int
 and that there is no missing interval for all dates contained in the dataset.
 This means that it would not matter much if the imputing process replaced missing values for each and every interval, or for each date only.
   
-### 5 - Are there differences in activity patterns between weekdays and weekends?
-## 5.1 - Create a new factor variable in the dataset with two levels
+## 5 - Are there differences in activity patterns between weekdays and weekends?
+### 5.1 - Create a new factor variable in the dataset with two levels
 
 ```r
 #___5.1___Create a new factor variable in the dataset with two levels - 
@@ -441,6 +439,18 @@ for(i in 1:length(dt_imputed$date)) {
 
 # Add the factor variables to dt_avgsteps in a new table
 dt_imputed2 <- data.table(dt_imputed, dayofweek)
+
+# Take a look at the nwe data
+head(dt_imputed2, 5)
+```
+
+```
+##    steps       date interval dayofweek
+## 1:     1 2012-10-01        0   weekday
+## 2:     0 2012-10-01        5   weekday
+## 3:     0 2012-10-01       10   weekday
+## 4:     0 2012-10-01       15   weekday
+## 5:     0 2012-10-01       20   weekday
 ```
 
 ## 5.2 - Make a panel plot
