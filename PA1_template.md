@@ -1,4 +1,12 @@
-# Reproducible Research - Peer Assessment 1
+---
+title: "Reproducible Research - Peer Assessment 1"
+header-includes: \usepackage{caption}
+output:
+  html_document:
+    keep_md: true
+  
+fig_caption: no
+---
 
 
 
@@ -120,7 +128,7 @@ h1 <- h1 + ylim(0, 14)
 plot(h1)
 ```
 
-![](PA1_template_files/figure-html/Part 2.2 - Histogram-1.png) 
+![plot of chunk Part 2.2 - Histogram](figure/Part 2.2 - Histogram-1.png) 
 
 
 ### 2.3 - Calculate and report the mean and median of the total number of steps taken per day
@@ -240,7 +248,7 @@ The following figure shows a plot from the previous table.
 plot(p1)
 ```
 
-![](PA1_template_files/figure-html/Part 3.1 Plot-1.png) 
+![plot of chunk Part 3.1 Plot](figure/Part 3.1 Plot-1.png) 
 
 
 ### 3.2 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
@@ -424,7 +432,7 @@ Below is a histogram showing the distribution of steps after missing values have
 plot(h2)
 ```
 
-![](PA1_template_files/figure-html/Part 4.4.1-1.png) 
+![plot of chunk Part 4.4.1](figure/Part 4.4.1-1.png) 
 
 Comparing the histogram in figure 3 with the histogram in figure 1 shows that the imputed data set leads to an increased number of observations at the center of the distribution. Let us take a quick look at why this happens by taking the difference between each observation in the imputed data set and another table where all missing values are replaced by zero.
 
@@ -522,7 +530,7 @@ h2 <- h2 + ylim(0, 14)
 plot(h2)
 ```
 
-![](PA1_template_files/figure-html/Part 4.4.2-1.png) 
+![plot of chunk Part 4.4.2](figure/Part 4.4.2-1.png) 
 
 ```r
 #setwd("C:/repos_github/coursera/repres")
@@ -679,7 +687,7 @@ p3 <- p3 + ylim(0, 260)
 plot(p3)
 ```
 
-![](PA1_template_files/figure-html/Part 5.2-1.png) 
+![plot of chunk Part 5.2](figure/Part 5.2-1.png) 
 
 Comparing the pattern for average number of steps for each interval for weekdays versus weekends shows that the maximum number of steps is quite a bit lower and appears later in the day on weekends. In other words, you tend to get up later in the weekends and run around less. Sounds sweet.
 
