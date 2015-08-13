@@ -434,7 +434,7 @@ h2 <- ggplot(data=dt_dailyUnion, aes(dt_dailyUnion$steps, fill = NaTreatment))
 
 h2 <- h2 + geom_histogram()
 h2 <- h2 + theme_classic()
-h2 <- h2 + ggtitle("Total number of steps per day") + xlab("steps")
+h2 <- h2 + ggtitle("Figure 3 - Total number of steps per day") + xlab("steps")
 h2 <- h2 + ylim(0, 14)
 plot(h2)
 #setwd("C:/repos_github/coursera/repres")
