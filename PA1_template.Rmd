@@ -106,6 +106,7 @@ The following table displays the first 5 rows with the total number of steps per
 head(dt_dailysteps, 5)
 ```
 
+
 #### 2.2 - Make a histogram of the total number of steps taken each day
 ```{r Part 2.2 - Histogram, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 
@@ -122,6 +123,7 @@ h1 <- h1 + ylim(0, 14)
 #ggsave(filename = "Histogram Number of Steps.pdf", plot = h1)
 plot(h1)
 ```
+
 
 #### 2.3 - Calculate and report the mean and median of the total number of steps taken per day
 ```{r Part 2.3 - Average and median, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
@@ -151,6 +153,7 @@ So far we've calculated the mean and median after ignoring missing values. Later
 tb1 <- data.table(Method, Averages, Medians)
 tb1
 ```
+
 
 ### 3 - What is the average daily pattern?
 #### 3.1 - Make a time series plot of the 5 minute intervals averaged accross all days.
@@ -213,6 +216,7 @@ The following figure shows a plot from the previous table.
 plot(p1)
 ```
 
+
 #### 3.2 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 ```{r Part 3.2, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 
@@ -227,6 +231,7 @@ maxint <- sqldf("SELECT interval, max(steps)
 
 ```
 The 5-minute interval which contains the maximum average steps per day, is **`r maxint$interval[1]`**. The average number of steps taken per day during this interval is **206**.
+
 
 ### 4 - Imputing Missing values
 #### 4.1 - Calculate and report the total number of missing values
@@ -243,8 +248,9 @@ missingTotal <- sum(sapply(dt_initial, function(x) sum(is.na(x))))
 
 Checking for missing values in each column using is.na() and sapply reveals that there are **no missing observations** for **date** and **interval**, and **2304** missing observations in the **steps** column. Of course, the total number of missing values in the dataset is **2304**.
 
+
 #### 4.2 - Devise a strategy for filling in all of the missing values in the dataset
-```{r Analysis_4.2, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
+```{r PArt 4.2, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 #___4.2___ Devise a strategy for filling in all of the missing values in the dataset
 
 # Make a data table in which missing values will be raplaced.
@@ -255,7 +261,7 @@ It would be pretty straight forward to replace all missing values with the avera
 
 
 #### 4.3 - Create a new dataset that is equal to the original dataset but with the missing data filled in.
-```{r Analysis_4.3, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
+```{r Part4.3, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 #___4.3___Create a new dataset that is equal to the original dataset 
 
 # Make a data table that contains daily averages for all intervals
@@ -302,6 +308,10 @@ write.table(dt_imputed, "imputedData.csv", row.names = FALSE)
 #nonmissing <- data.table(read.table("imputedData.csv", sep = " ", header = TRUE))
 ```
 
+The following table displays the first and last five observations of the imputed data set.
+```{r Part4.3.1 Imputed data, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
+dt_imputed
+```
 #### 4.4 - Make a histogram of the total number of steps taken each day and Calculate and report the mean and median.
 ```{r Part 4.4, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 #___4.4___Make a histogram of the total number of steps taken each day 
@@ -338,8 +348,9 @@ ggsave(filename = "Histogram Number of Steps no missing values.pdf", plot = h1)
 There are a total of 2304 missing values in the original data set, 
 all of which are missing observations for steps for given dates and intervals.
 
-The sum of steps added to the original data set is 85128.
+The sum of steps added to the original data set is **`r fakesteps`**.
 Below is a histogram showing the distribution of steps after missing values have been imputed.
+
 ```{r Part 4.4.1, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 plot(h2)
 ```
@@ -377,7 +388,7 @@ dt_diffdaysNo0 <- sqldf("SELECT stepsum, date
                       Where stepsum <> 0
                       Group by date")
 dt_diffdaysNo0
-nrow(dt_diffdaysNo0)
+# nrow(dt_diffdaysNo0)
 ```
 
 The previous table shows the sum of the steps that have been added to the data set due to missing values.
