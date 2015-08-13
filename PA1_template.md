@@ -1,4 +1,4 @@
-# Reproducible Research - Peer Assigment 1
+# Reproducible Research - Peer Assignment 1
 
 
 
@@ -25,17 +25,15 @@ head(dt_initial,5)
 ## 5:    NA 2012-10-01       20
 ```
 
-The table above displays the first five observations from the initial dataset
+The table above displays the first five observations from the initial data set
 
 
 #### 1.2 - Process/transform the data into a format suitable for the analysis
-Aside from removing missing values, no further processing of the data seems necessary at shis point.
-All observations are of the same format in the different columns, and column names describe the contents well.
-
-All further data munging and imputing is done stepwise in the assignment.
+Aside from removing missing values, no further processing of the data seems necessary at this point.
+All observations are of the same format in the different columns, and column names describe the contents well. All further data munging and imputing is done step wise in the assignment.
 
 ```r
-#___1.2___ Process/transform
+#___1.2___Process/transform
 
 # Remove all observations with missing data
 dt_initialNaNo <- dt_initial[complete.cases(dt_initial),]
@@ -44,7 +42,7 @@ dt_initialNaNo <- dt_initial[complete.cases(dt_initial),]
 naRemoved <- nrow(dt_initial) - nrow(dt_initialNaNo)
 ```
 
-Here's a table showing the first five observations from the initial dataset with all missing values removed.
+Here's a table showing the first five observations from the initial data set with all missing values removed.
 
 ```r
 head(dt_initialNaNo,5)
@@ -62,13 +60,12 @@ head(dt_initialNaNo,5)
 
 ### 2 - What is the mean total number of steps taken per day?
 #### 2.1 - Calculate the total number of steps taken per day 
-For the total number of steps per day, and the corresponding histogram,it is convenient to transform the data into showing unique dates in the date column.This way, total steps for all time intervals are displayed for each day in the datatable dt_dailysteps.
+For the total number of steps per day, and the corresponding histogram,it is convenient to transform the data into showing unique dates in the date column.This way, total steps for all time intervals are displayed for each day in the data table dt_dailysteps.
 There are several ways you can do this.The package data.table has several methods, but mostly I use an sql package for R called sqldf.
 
 
 ```r
 #___2.1___Calculate the total number of steps taken per day
-
 
 # Number of steps per day using data.table
 dt_dailystepsDT <- dt_initialNaNo[,.(steps.sum = sum(steps)),by=date]
@@ -79,15 +76,17 @@ dt_dailysteps <- sqldf("SELECT sum(steps) as stepsum, date
                           Group by date")
 dt_dailysteps <- data.table(dt_dailysteps)
 
+grandtotalsteps <- sum(dt_dailysteps$stepsum)
+grandtotalobs <- nrow(dt_initialNaNo)
+
 rows_dt_dailysteps <- nrow(dt_dailysteps)
 remove(dt_dailystepsDT)
 ```
 
 
 
-
-Ordering the sum of steps for all intervals per day results in a table with 53 observations.
-The following table displays the first 5 rows with the total number of steps per day displayed in the column named stepsum.
+There's a total of **570608** steps recorded accross  **15264** observations in the original dataset after accounting for missing values. Ordering the sum of steps for all intervals per day results in a table with **53** records
+The following table displays the first 5 rows with the total number of steps per day displayed in the column named stepsum. This table is the basis for the histogram that follows in Figure 1.
 
 
 ```r
@@ -107,6 +106,7 @@ head(dt_dailysteps, 5)
 
 ```r
 #___2.2___Make a histogram of number of steps taken each day
+
 h1 <- ggplot(data=dt_dailysteps, aes(dt_dailysteps$stepsum)) 
 h1 <- h1 + geom_histogram(colour = "blue", fill = "grey")
 h1 <- h1 + theme_classic()
@@ -125,7 +125,7 @@ plot(h1)
 
 ```r
 #___2.3___Calculate and report the mean and median 
-#         of the total number of steps taken per day
+
 nsteps <- sum(dt_dailysteps$steps)
 avgsteps <- mean(dt_dailysteps$stepsum)
 medsteps <- median(dt_dailysteps$stepsum)
@@ -140,10 +140,9 @@ Medians <-  c(format(round(medsteps, 2), nsmall = 2),"","")
 #tb1 <- data.table(Method, Averages, Medians)
 ```
 
-The total number of steps taken in this dataset, is **570608**. 
 When accumulating all intervals per day, which is what the assignment asks for, 
 the mean and median number of steps are **10766.19**  and **10765**, respectively.
-These findinggs are displayed in the table below, which will be filled with more findings along the way.
+These findings are displayed in the table below, which will be filled with more findings along the way.
 So far we've calculated the mean and median after ignoring missing values. Later, we'll calculate the same values using other methods for handling missing values.
 
 
@@ -347,10 +346,10 @@ setwd("C:/repos_github/coursera/repres")
 ggsave(filename = "Histogram Number of Steps no missing values.pdf", plot = h1)
 ```
 
-There are a total of 2304 missing values in the original dataset, 
+There are a total of 2304 missing values in the original data set, 
 all of which are missing observations for steps for given dates and intervals.
 
-The sum of steps added to the original dataset is 85128.
+The sum of steps added to the original data set is 85128.
 Below is a histogram showing the distribution of steps after missing values have been imputed.
 
 ```r
@@ -359,7 +358,7 @@ plot(h2)
 
 ![](PA1_template_files/figure-html/Part 4.4.1-1.png) 
 
-Comparing the histogram in figure 3 with the histogram in figure 1 shows that the imputed dataset leads to an increased number of observations at the center of the distribution. Let us take a quick look at why this happens by taking the difference between each observation in the imputed dataset and another table where all missing values are replacd by zero.
+Comparing the histogram in figure 3 with the histogram in figure 1 shows that the imputed data set leads to an increased number of observations at the center of the distribution. Let us take a quick look at why this happens by taking the difference between each observation in the imputed data set and another table where all missing values are replaced by zero.
 
 #### 4.4.2 - Imputing Missing values, a closer look at the implications.
 
@@ -431,10 +430,10 @@ nrow(dt_diffdaysNo0)
 ## [1] 8
 ```
 
-The previous table shows the sum of the steps that have been added to the dataset due to missing values.
+The previous table shows the sum of the steps that have been added to the data set due to missing values.
 The fact that the sum of 10641 is equal for all days reveals an interesting detail. 
 It turns out that all dates with missing values, have missing values for all intervals, 
-and that there is no missing interval for all dates contained in the dataset.
+and that there is no missing interval for all dates contained in the data set.
 This means that it would not matter much if the imputing process replaced missing values for each and every interval, or for each date only.
   
 ### 5 - Are there differences in activity patterns between weekdays and weekends?
