@@ -2,6 +2,7 @@
 
 
 
+
 ### Part 1 - Loading and preprocessing the data
 
 #### 1.1 - Load the data
@@ -12,7 +13,27 @@ The following chunk shows how it's done.
 #___1.1___Load the data
 setwd("C:/repos_github/coursera/repres/data")
 dt_initial <- data.table(read.table("activity.csv", sep = ",", header = TRUE))
+head(dt_initial,5)
+```
 
+```
+##    steps       date interval
+## 1:    NA 2012-10-01        0
+## 2:    NA 2012-10-01        5
+## 3:    NA 2012-10-01       10
+## 4:    NA 2012-10-01       15
+## 5:    NA 2012-10-01       20
+```
+
+The table above displays the first five observations from the initial dataset
+
+
+#### 1.2 - Processing the data 
+Aside from removing missing values, no further processing of the data seems necessary at shis point.
+
+All further data munging and imputing is done stepwise in the assignment.
+
+```r
 #___1.2___Process/transform the data into a format suitable for the analysis
 #         For this part of the assignment, only complete cases of the dataset is used
 #         In other words, all missing values for all columns are removed.
@@ -27,12 +48,24 @@ dt_initialNaNo <- dt_initial[complete.cases(dt_initial),]
 naRemoved <- nrow(dt_initial) - nrow(dt_initialNaNo)
 ```
 
-### 1.2 - Processing the data 
-No initial processing of the data seems necessary. All data munging and imputing is done stepwise
-in the assignment.
+Here's a table showing the first five observations from the initial dataset with all missing values removed.
 
-## 2 - What is the mean total number of steps taken per day?
-### 2.1 - Calculate the total number of steps taken per day 
+```r
+head(dt_initialNaNo,5)
+```
+
+```
+##    steps       date interval
+## 1:     0 2012-10-02        0
+## 2:     0 2012-10-02        5
+## 3:     0 2012-10-02       10
+## 4:     0 2012-10-02       15
+## 5:     0 2012-10-02       20
+```
+
+
+### 2 - What is the mean total number of steps taken per day?
+#### 2.1 - Calculate the total number of steps taken per day 
 
 ```r
 #___2.1___Calculate the total number of steps taken per day
@@ -58,6 +91,9 @@ rows_dt_dailysteps <- nrow(dt_dailysteps)
 remove(dt_dailystepsDT)
 ```
 
+
+
+
 Ordering the sum of steps for all intervals per day results in a table with 53 observations.
 The following table displays the first 5 rows with the total number of steps per day displayed in the column named stepsum.
 
@@ -75,7 +111,7 @@ head(dt_dailysteps, 5)
 ## 5:   15420 2012-10-06
 ```
 
-### 2.2 - Make a histogram of the total number of steps taken each day
+#### 2.2 - Make a histogram of the total number of steps taken each day
 
 ```r
 #___2.2___Make a histogram of number of steps taken each day
@@ -93,7 +129,7 @@ plot(h1)
 
 ![](PA1_template_files/figure-html/Part 2.2 - Histogram-1.png) 
 
-### 2.3 - Calculate and report the mean and median of the total number of steps taken per day
+#### 2.3 - Calculate and report the mean and median of the total number of steps taken per day
 
 ```r
 #___2.3___Calculate and report the mean and median 
@@ -131,8 +167,8 @@ tb1
 ## 3:    NA Zero
 ```
 
-## 3 - What is the average daily pattern?
-### 3.1 - Make a time series plot of the 5 minute intervals averaged accross all days.
+### 3 - What is the average daily pattern?
+#### 3.1 - Make a time series plot of the 5 minute intervals averaged accross all days.
 
 ```r
 #___3.1___Make a time series plot of the 5 minute intervals averaged accross all days.
@@ -159,13 +195,6 @@ p1 <- ggplot(dt_dailypattern, aes((interval), steps))
 p1 <- p1 + geom_line(colour = "blue") + theme_classic() + 
       ggtitle("Daily pattern by 5 minute interval") + xlab("interval")
 p1 <- p1 + theme(plot.title = element_text(lineheight=.8, face="bold"))
-```
-
-### 3.2 - Average and median steps per day
-
-```r
-#___3.2___Which 5-minute interval, on average across all the days in the dataset, 
-#         contains the maximum number of steps?
 
 # Find interval with max steps
 maxsteps = max(dt_dailypattern$steps)
@@ -191,14 +220,26 @@ p1 <- p1 + ylim(0, 260)
 plot(p1)
 ```
 
-![](PA1_template_files/figure-html/Part 3.2-1.png) 
+![](PA1_template_files/figure-html/Part 3.1-1.png) 
 
-### 3.2 Average and median steps per day
+#### 3.2 Average and median steps per day
+
+```r
+#___3.2___Which 5-minute interval, on average across all the days in the dataset, 
+#         contains the maximum number of steps?
+
+# Find interval with max steps
+maxsteps = max(dt_dailypattern$steps)
+
+# Look up the corresponding interval for the max number of steps
+maxint <- sqldf("SELECT interval, max(steps)
+                  FROM dt_dailypattern")
+```
 The 5-minute interval which contains the maximum average steps per day, is **835**.
 The average number of steps taken per day during this interval is **206**.
 
-## 4 - Imputing Missing values
-### 4.1 - Calculate and report the total number of missing values
+### 4 - Imputing Missing values
+#### 4.1 - Calculate and report the total number of missing values
 
 ```r
 # OBJECTIVE:  Replace missing step data for all intervals with
@@ -214,7 +255,7 @@ The average number of steps taken per day during this interval is **206**.
 missingTotal <- sum(sapply(dt_initial, function(x) sum(is.na(x))))
 ```
 
-### 4.2 - Devise a strategy for filling in all of the missing values in the dataset
+#### 4.2 - Devise a strategy for filling in all of the missing values in the dataset
 
 ```r
 #___4.2___Devise a strategy for filling in all of the missing values in the dataset
@@ -224,7 +265,7 @@ missingTotal <- sum(sapply(dt_initial, function(x) sum(is.na(x))))
 #         for the according interval
 ```
 
-### 4.3 - Create a new dataset that is equal to the original dataset but with the missing data filled in.
+#### 4.3 - Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
 ```r
 #___4.3___Create a new dataset that is equal to the original dataset 
@@ -282,7 +323,7 @@ write.table(dt_imputed, "imputedData.csv", row.names = FALSE)
 #nonmissing <- data.table(read.table("imputedData.csv", sep = " ", header = TRUE))
 ```
 
-### 4.4 - Make a histogram of the total number of steps taken each day and Calculate and report the mean and median.
+#### 4.4 - Make a histogram of the total number of steps taken each day and Calculate and report the mean and median.
 
 ```r
 #___4.4___Make a histogram of the total number of steps taken each day 
@@ -328,7 +369,7 @@ plot(h2)
 
 Comparing the histogram in figure 3 with the histogram in figure 1 shows that the imputed dataset leads to an increased number of observations at the center of the distribution. Let us take a quick look at why this happens by taking the difference between each observation in the imputed dataset and another table where all missing values are replacd by zero.
 
-### 4.4.2 - Imputing Missing values, a closer look at the implications.
+#### 4.4.2 - Imputing Missing values, a closer look at the implications.
 
 ```r
 # Make a table of the origninal dataset where all missing values for steps are replaced by 0.
@@ -404,8 +445,8 @@ It turns out that all dates with missing values, have missing values for all int
 and that there is no missing interval for all dates contained in the dataset.
 This means that it would not matter much if the imputing process replaced missing values for each and every interval, or for each date only.
   
-## 5 - Are there differences in activity patterns between weekdays and weekends?
-### 5.1 - Create a new factor variable in the dataset with two levels
+### 5 - Are there differences in activity patterns between weekdays and weekends?
+#### 5.1 - Create a new factor variable in the dataset with two levels
 
 ```r
 #___5.1___Create a new factor variable in the dataset with two levels - 
@@ -453,7 +494,7 @@ head(dt_imputed2, 5)
 ## 5:     0 2012-10-01       20   weekday
 ```
 
-## 5.2 - Make a panel plot
+#### 5.2 - Make a panel plot
 
 ```r
 # Reset regional settings
@@ -562,7 +603,6 @@ Comparing the pattern for average number of steps for each interval for weekdays
 #library(knitr)
 #knit('PA1_template.Rmd')
 ```
-
 
 
 
