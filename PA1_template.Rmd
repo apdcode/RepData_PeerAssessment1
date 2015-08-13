@@ -4,6 +4,7 @@ header-includes: \usepackage{caption}
 output:
   html_document:
     keep_md: true
+  
 fig_caption: no
 ---
 
@@ -51,17 +52,13 @@ head(dt_initial,5)
 The table above displays the first five observations from the initial dataset
 
 
-#### 1.2 - Processing the data 
+#### 1.2 - Process/transform the data into a format suitable for the analysis
 Aside from removing missing values, no further processing of the data seems necessary at shis point.
+All observations are of the same format in the different columns, and column names describe the contents well.
 
 All further data munging and imputing is done stepwise in the assignment.
 ```{r Part 1.2, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE}
-#___1.2___Process/transform the data into a format suitable for the analysis
-#         For this part of the assignment, only complete cases of the dataset is used
-#         In other words, all missing values for all columns are removed.
-#         Note, however, that the assigment requires quite a bit more data transforming, 
-#         but this will be done at the appropriate parts of the assignment to 
-#         show the work flow.
+#___1.2___ Process/transform
 
 # Remove all observations with missing data
 dt_initialNaNo <- dt_initial[complete.cases(dt_initial),]
@@ -79,17 +76,13 @@ head(dt_initialNaNo,5)
 
 ### 2 - What is the mean total number of steps taken per day?
 #### 2.1 - Calculate the total number of steps taken per day 
+For the total number of steps per day, and the corresponding histogram,it is convenient to transform the data into showing unique dates in the date column.This way, total steps for all time intervals are displayed for each day in the datatable dt_dailysteps.
+There are several ways you can do this.The package data.table has several methods, but mostly I use an sql package for R called sqldf.
+
 ```{r Part 2.1, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 
 #___2.1___Calculate the total number of steps taken per day
-#         For the total number of steps per day, and the corresponding histogram,
-#         it is convenient to transform the data into 
-#         showing unique dates in the date column.
-#         This way, total steps for all time intervals are displayed for each day in
-#         the datatable dt_dailysteps.
-#         There are several ways you can do this. 
-#         The package data.table has several methods,
-#         but mostly I use an sql package for R called sqldf.
+
 
 # Number of steps per day using data.table
 dt_dailystepsDT <- dt_initialNaNo[,.(steps.sum = sum(steps)),by=date]
