@@ -232,18 +232,16 @@ The 5-minute interval which contains the maximum average steps per day, is **`r 
 #### 4.1 - Calculate and report the total number of missing values
 ```{r Part 4.1, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 
-# OBJECTIVE:  Replace missing step data for all intervals with
-#             average number of stepds per day for those observations
-#             without missing values.
-#             Missing observations, if any, for date and interval are removed.
-
 #___4.1___Calculate and report the total number of missing values in the dataset 
-# A look at the data
-# summary(dt_initial)
+
+# First check for missing values in each column
+missingColumnwise <- sapply(dt_initial, function(x) sum(is.na(x)))
 
 # Total number of missing values
 missingTotal <- sum(sapply(dt_initial, function(x) sum(is.na(x))))
 ```
+
+Checking for missing values in each column using is.na() and sapply reveals that there are **no missing observations** for **date** and **interval**, and **2304** missing observations in the **steps** column. Of course, the total number of missing values in the dataset is **2304**.
 
 #### 4.2 - Devise a strategy for filling in all of the missing values in the dataset
 ```{r Analysis_4.2, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
@@ -252,7 +250,11 @@ missingTotal <- sum(sapply(dt_initial, function(x) sum(is.na(x))))
 #         all of which are missing observations for steps for given dates and intervals.
 #         The missing values will be replaced by the average number of steps
 #         for the according interval
+
 ```
+
+It would be pretty straight forward to replace all missing values with the average or median step for each day. It's a bit more challenging to do the same for each and every interval, so this is what I'm going to do. There are surely many ways to do this, perhaps most efficiently in dplyr. I'm going to brute force the whole process using a nested For Loop. The following code loops through the table **dt_imputed**. For each missing value, the code loops through the table **avgsteps**, finds the corresponding step count, and writes it to the table **dt_imputed**.
+
 
 #### 4.3 - Create a new dataset that is equal to the original dataset but with the missing data filled in.
 ```{r Analysis_4.3, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
