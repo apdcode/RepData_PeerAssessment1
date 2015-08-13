@@ -413,14 +413,6 @@ tb1_methods
 ## 3:    NA Zero
 ```
 
-```r
-format(round(fakesteps, 0), nsmall = 0)
-```
-
-```
-## [1] "85128"
-```
-
 The sum of steps added to the original data after the imputing process is **85128**.
 This appears as the difference between the Steptotal column for NA removed and NA Imputed in the table above.
 We can also see that the average and median number of steps decreases respectively -16 and -124
@@ -440,13 +432,13 @@ Comparing the histogram in figure 3 with the histogram in figure 1 shows that th
 
 ```r
 # Make a table of the origninal dataset where all missing values for steps are replaced by 0.
-    dt_initialNa0 <- dt_initial
-    dt_initialNa0[is.na(dt_initialNa0)] <- 0
+dt_initialNa0 <- dt_initial
+dt_initialNa0[is.na(dt_initialNa0)] <- 0
   
 dt_diff <- (dt_imputed - dt_initialNa0)
-    dt_diff$date <- dt_initial$date
-    dt_diff$interval <- dt_initial$interval
-    sum(dt_diff$steps)
+dt_diff$date <- dt_initial$date
+dt_diff$interval <- dt_initial$interval
+sum(dt_diff$steps)
 ```
 
 ```
@@ -468,6 +460,7 @@ sum(dt_diffdays$stepsum)
 dt_diffdays <- (sqldf("SELECT sum(steps) as stepsum, date 
                         FROM dt_diff
                         Group by date"))
+
 dt_diffdays <- data.table(dt_diffdays)
 sum(dt_diffdays$stepsum)
 ```
@@ -499,15 +492,48 @@ dt_diffdaysNo0
 ```
 
 ```r
-# nrow(dt_diffdaysNo0)
+# UNION (dt_dailysteps + category = nonimputed) and (dt_dailysteps3 + category = imputed)
+FactImpNot <- 1:nrow(dt_dailysteps)
+FactImp <- 1:nrow(dt_dailysteps2)
+
+FactImp <- rep("NaImputed",length(FactImp))
+FactImpNot <- rep("NaIgnored",length(FactImpNot))
+
+NaTreatment <- FactImpNot
+dt_dailyStepsCat <- data.table(dt_dailysteps, NaTreatment)
+
+NaTreatment <- FactImp
+dt_dailySteps2Cat <- data.table(dt_dailysteps2, NaTreatment)
+
+dt_dailyUnion <- (sqldf("SELECT * from dt_dailyStepsCat 
+                            UNION ALL
+                              SELECT * from dt_dailySteps2Cat
+                            ORDER BY date"))
+dt_dailyUnion <- data.table(dt_dailyUnion)
+
+# Histogram of number of steps per day
+h2 <- ggplot(data=dt_dailyUnion, aes(dt_dailyUnion$steps, fill = NaTreatment))
+
+
+h2 <- h2 + geom_histogram()
+h2 <- h2 + theme_classic()
+h2 <- h2 + ggtitle("Total number of steps per day") + xlab("steps")
+h2 <- h2 + ylim(0, 14)
+plot(h2)
 ```
 
-The previous table shows the sum of the steps that have been added to the data set due to missing values.
-The fact that the sum of 10641 is equal for all days reveals an interesting detail. 
-It turns out that all dates with missing values, have missing values for all intervals, 
-and that there is no missing interval for all dates contained in the data set.
-This means that it would not matter much if the imputing process replaced missing values for each and every interval, or for each date only.
-  
+![](PA1_template_files/figure-html/Part 4.4.2-1.png) 
+
+```r
+#setwd("C:/repos_github/coursera/repres")
+#ggsave(filename = "Histogram Number of Steps no missing values.pdf", plot = h1)
+```
+
+The previous table shows the sum of the steps that have been added to the data set due to missing values.The fact that the sum of **10641** is equal for all days reveals an interesting detail. It turns out that all dates with missing values, have missing values for all intervals, and that there is no missing interval for all dates contained in the data set. This means that it would not matter much if the imputing process replaced missing values for each and every interval, or for each date only. 
+
+It also means that it's not possible to add any particular value to the analysis by replacing missing values in this example. It would have made much more sense if the original dataset was missing observations for **some intervals** for some days. In this case, it would be possible to add to the value of the analysis, particularly if the same intervals were not missing accross very many days.
+
+
 ## 5 - Are there differences in activity patterns between weekdays and weekends?
 ### 5.1 - Create a new factor variable in the dataset with two levels
 
