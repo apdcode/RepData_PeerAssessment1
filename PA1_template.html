@@ -658,7 +658,7 @@ plot(p3)</code></pre>
 <p>Another interesting thing is that the weekday pattern flattens after the peak at 835, and that the following intervals have a lower step count than compared to the weekends. This becomes more apparent when the two lines are plotted against a common y axis in the figure that follows. Briefly put, the graph will show that, compared to weekends, you get up earlier in the morning and run around a lot more just after getting up. Then, you sit down and more or less stay in the chair before you get up and go to bed. In the weekends, you get up later, move less around just after getting up, but move around a lot more during the day. Which also sounds nice. Have a nice weekend!</p>
 </div>
 <div id="extra---combine-panel-plot-in-a-single-plot" class="section level3">
-<h3>5.2 Extra - Combine panel plot in a single plot</h3>
+<h3>5.2.1 Extra - Combine panel plot in a single plot</h3>
 <pre class="r"><code># Common plot for average steps per interval, distingueshed by day of week 
 p4 &lt;- ggplot(dt_weekpatterns, aes(interval, steps, colour = dayofweek )) + geom_line()
 p4 &lt;- p4 + theme_classic()

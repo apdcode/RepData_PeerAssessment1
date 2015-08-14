@@ -461,7 +461,7 @@ Below is a histogram showing the distribution of steps after missing values have
 plot(h2)
 ```
 
-![plot of chunk Part 4.4.1 Histogram Number of Steps no missing values](figure/Part 4.4.1 Histogram Number of Steps no missing values-1.png) 
+![plot of chunk Part 4.4.1 Histogram Number of Steps Imputed](figure/Part 4.4.1 Histogram Number of Steps Imputed-1.png) 
 
 Comparing the histogram in figure 3 with the histogram in figure 1 shows that the imputed data set leads to an increased number of observations at the center of the distribution. Let us take a quick look at why this happens by taking the difference between each observation in the imputed data set and another table where all missing values are replaced by zero.
 
@@ -723,7 +723,7 @@ Comparing the pattern for average number of steps for each interval for weekdays
 
 Another interesting thing is that the weekday pattern flattens after the peak at 835, and that the following intervals have a lower step count than compared to the weekends. This becomes more apparent when the two lines are plotted against a common y axis in the figure that follows. Briefly put, the graph will show that, compared to weekends, you get up earlier in the morning and run around a lot more just after getting up. Then, you sit down and more or less stay in the chair before you get up and go to bed. In the weekends, you get up later, move less around just after getting up, but move around a lot more during the day. Which also sounds nice. Have a nice weekend!
 
-### 5.2 Extra - Combine panel plot in a single plot
+### 5.2.1 Extra - Combine panel plot in a single plot
 
 ```r
 # Common plot for average steps per interval, distingueshed by day of week 
