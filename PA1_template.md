@@ -32,7 +32,7 @@ for(i in 1:length(pck_toload)) {
 }
 remove(i)
 
-#___0.4___ SOme common standards for charts using ggplot 2
+#___0.4___ SOme common standards for charts using ggplot2
 
 form_xlab1 <- element_text(face = "italic", color = "blue")
 form_title1 <- element_text(face = "bold",lineheight=.8)
@@ -73,6 +73,7 @@ All observations are of the same format in the different columns, and column nam
 #___1.2___Process/transform
 
 # Remove all observations with missing data
+# The prefix dt indicates that the variable is a datatable
 dt_initialNaNo <- dt_initial[complete.cases(dt_initial),]
 
 # Rows with missing data removed
@@ -155,7 +156,7 @@ h1 <- h1 + ylim(0, 14)
 plot(h1)
 ```
 
-![plot of chunk Part 2.2 - Histogram](figure/Part 2.2 - Histogram-1.png) 
+![plot of chunk Part 2.2 - Figure 1 Histogram](figure/Part 2.2 - Figure 1 Histogram-1.png) 
 
 
 ### 2.3 - Calculate and report the mean and median of the total number of steps taken per day
@@ -171,10 +172,10 @@ medsteps_NaNo <- median(dt_dailysteps$stepsum)
 # h1
 
 #Data table of the results
-Method <- c("NA removed", "NA Imputed", "NA Zero")
-Steptotal <- c(format(round(nsteps_NaNo, 0), nsmall = 0),"","")
-Averages <- c(format(round(avgsteps_NaNo, 2), nsmall = 2),"","")
-Medians <-  c(format(round(medsteps_NaNo, 0), nsmall = 0),"","")
+Method <- c("NA removed", "NA Imputed")
+Steptotal <- c(format(round(nsteps_NaNo, 0), nsmall = 0),"")
+Averages <- c(format(round(avgsteps_NaNo, 2), nsmall = 2),"")
+Medians <-  c(format(round(medsteps_NaNo, 0), nsmall = 0),"")
 tb1_methods <- data.table(Method, Steptotal, Averages, Medians)
 ```
 
@@ -192,14 +193,13 @@ tb1_methods
 ```
 ##        Method Steptotal Averages Medians
 ## 1: NA removed    570608 10766.19   10765
-## 2: NA Imputed                           
-## 3:    NA Zero
+## 2: NA Imputed
 ```
 
 
 ## 3 - What is the average daily pattern?
 ### 3.1 - Make a time series plot of the 5 minute intervals averaged accross all days.
-Again, it is convenent to transform the original data. Here, the data is stored as an average for each interval accross all observed days in the data table dt_dailypattern.
+Again, it is convenient to transform the original data. Here, the data is stored as an average for each interval accross all observed days in the data table dt_dailypattern.
 
 ```r
 #___3.1___Make a time series plot 
@@ -276,7 +276,7 @@ The following figure shows a plot from the previous table.
 plot(p1)
 ```
 
-![plot of chunk Part 3.1 Plot Daily Steps](figure/Part 3.1 Plot Daily Steps-1.png) 
+![plot of chunk Part 3.1 - Plot Daily Steps](figure/Part 3.1 - Plot Daily Steps-1.png) 
 
 
 ### 3.2 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
@@ -432,10 +432,10 @@ avgsteps_NaImp <- mean(dt_dailysteps2$stepsum)
 medsteps_NaImp <- median(dt_dailysteps2$stepsum)
 
 #Data table of the results
-Method <- c("NA removed", "NA Imputed", "NA Zero")
-Steptotal <- c(format(round(nstepsNaNo, 0), nsmall = 0),nsteps_NaImp ,"")
-Averages <- c(format(round(avgstepsNaNo, 2), nsmall = 2),format(round(avgsteps_NaImp, 2), nsmall = 2) ,"")
-Medians <-  c(format(round(medstepsNaNo, 0), nsmall = 0),medsteps_NaImp ,"")
+Method <- c("NA removed", "NA Imputed")
+Steptotal <- c(format(round(nstepsNaNo, 0), nsmall = 0),nsteps_NaImp)
+Averages <- c(format(round(avgstepsNaNo, 2), nsmall = 2),format(round(avgsteps_NaImp, 2), nsmall = 2))
+Medians <-  c(format(round(medstepsNaNo, 0), nsmall = 0),medsteps_NaImp)
 tb1_methods <- data.table(Method, Steptotal, Averages, Medians)
 
 impdiff_avg <- format(round(avgsteps_NaImp - avgstepsNaNo, 0), nsmall = 0)
@@ -447,7 +447,6 @@ tb1_methods
 ##        Method Steptotal Averages Medians
 ## 1: NA removed    570608 10766.19   10765
 ## 2: NA Imputed    655736 10749.77   10641
-## 3:    NA Zero
 ```
 
 The sum of steps added to the original data after the imputing process is **85128**.
@@ -557,7 +556,7 @@ The previous table shows the sum of the steps that have been added to the data s
 
 It also means that it's not possible to add any particular value to the analysis by replacing missing values in this example. It would have made much more sense if the original dataset was missing observations for **some intervals** for some days. In this case, it would be possible to add to the value of the analysis, particularly if the same intervals were not missing accross very many days.
 
-This can be further illustrated by combining the two previous histograms in Figure 1 and Figure 2 into a new histogram inFfigure 4. Notice that the number of days in the previous table is 8, and that the sum of steps for each day is 10641. The histogram in Figure 3 shows an increase of  eight counts in the bin where 10641 is located. The value added to the analysis by including more dates with no observations, I would say is pretty close to zero.
+This can be further illustrated by combining the two previous histograms in Figure 1 and Figure 2 into a new histogram in Figure 4. Notice that the number of days in the previous table is 8, and that the sum of steps for each day is 10641. The histogram in Figure 3 shows a light grey area that illustrate an increase ofeight counts in the bin where 10641 is located. The only thing you get by adding more days with the average number of steps only, is an increased stepcount around the center of the distribution of steps. The value added to the analysis by including more dates with no initially no observations, I would say is pretty close to zero.
 
 
 ```r
@@ -743,7 +742,7 @@ p4 <- p4 + ylim(0, 260)
 plot(p4)
 ```
 
-![plot of chunk Part 5.2 Extra Combine panel plot in a single plot](figure/Part 5.2 Extra Combine panel plot in a single plot-1.png) 
+![plot of chunk Part 5.2.1 Extra Combine panel plot in a single plot](figure/Part 5.2.1 Extra Combine panel plot in a single plot-1.png) 
 
 ```r
 #___1.0___  Make md file
