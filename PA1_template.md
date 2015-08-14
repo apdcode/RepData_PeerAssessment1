@@ -111,9 +111,12 @@ head(dt_dailysteps, 5)
 h1 <- ggplot(data=dt_dailysteps, aes(dt_dailysteps$stepsum)) 
 h1 <- h1 + geom_histogram(colour = "blue", fill = "grey")
 h1 <- h1 + theme_classic()
-h1 <- h1 + ggtitle("Figure 1 - Daily steps for each interval") + xlab("steps")
-h1 <- h1 + theme(plot.title = element_text(lineheight=.8, face="bold"))
+h1 <- h1 + ggtitle("Figure 1 - Histogram of total steps per day") + xlab("steps")
+h1 <- h1 + theme(plot.title = form_title1 )
+h1 <- h1 + theme(axis.title = form_xlab1)
 h1 <- h1 + ylim(0, 14)
+
+
 #plot(h1)
 #setwd("C:/repos_github/coursera/repres")
 #ggsave(filename = "Histogram Number of Steps.pdf", plot = h1)
@@ -187,7 +190,7 @@ numberofintervals <- nrow(dt_dailypattern)
 p1 <- ggplot(dt_dailypattern, aes((interval), steps))
 p1 <- p1 + geom_line(colour = "blue") + theme_classic() + 
       ggtitle("Daily pattern by 5 minute interval") + xlab("interval")
-p1 <- p1 + theme(plot.title = element_text(lineheight=.8, face="bold"))
+p1 <- p1 + theme(plot.title = form_title1 )
 
 # Find interval with max steps
 maxsteps = max(dt_dailypattern$steps)
@@ -209,6 +212,7 @@ p1 <- p1 + geom_text(data = subset(dt_dailypattern, interval == maxint$interval[
 # Plot the plot
 p1 <- p1 + theme(plot.title = element_text(lineheight=.8, face="bold"))
 p1 <- p1 + ggtitle("Figure 2 - Daily steps for each interval") + xlab("steps")
+p1 <- p1 + theme(axis.title = form_xlab1)
 p1 <- p1 + ylim(0, 260)
 # plot(p1)
 ```
@@ -383,7 +387,8 @@ medstepsNaNo <- median(dt_dailysteps$steps)
 h2 <- ggplot(data=dt_dailysteps2, aes(dt_dailysteps2$steps))
 h2 <- h2 + geom_histogram(colour = "blue", fill = "grey")
 h2 <- h2 + theme_classic()
-h2 <- h2 + ggtitle("Total number of steps per day") + xlab("steps")
+h2 <- h2 + ggtitle(" Figure 2 - Total number of steps per day") + xlab("steps")
+h2 <- h2 + theme(axis.title = form_xlab1)
 h2 <- h2 + ylim(0, 14)
 #plot(h2)
 #setwd("C:/repos_github/coursera/repres")
@@ -438,38 +443,21 @@ dt_initialNa0[is.na(dt_initialNa0)] <- 0
 dt_diff <- (dt_imputed - dt_initialNa0)
 dt_diff$date <- dt_initial$date
 dt_diff$interval <- dt_initial$interval
-sum(dt_diff$steps)
-```
+# sum(dt_diff$steps)
 
-```
-## [1] 85128
-```
-
-```r
 dt_diffdays <- data.table(sqldf("SELECT sum(steps) as stepsum, date 
                                   FROM dt_diff
                                   Group by date"))
-sum(dt_diffdays$stepsum)
-```
+# sum(dt_diffdays$stepsum)
 
-```
-## [1] 85128
-```
-
-```r
 dt_diffdays <- (sqldf("SELECT sum(steps) as stepsum, date 
                         FROM dt_diff
                         Group by date"))
 
 dt_diffdays <- data.table(dt_diffdays)
-sum(dt_diffdays$stepsum)
-```
+# sum(dt_diffdays$stepsum)
 
-```
-## [1] 85128
-```
 
-```r
 # Make datatable of dt_diffdays with all zeros removed
 # In other words, alld days with no effects from the imputing process are disregarded.
 dt_diffdaysNo0 <- sqldf("SELECT stepsum, date 
@@ -508,25 +496,42 @@ h3 <- h3 + geom_histogram(alpha = 0.3, colour = "blue", position="identity")
 h3 <- h3 + scale_fill_manual(values = c("black", "grey"))
 h3 <- h3 + theme_classic()
 h3 <- h3 + ggtitle("Figure 3 - Total number of steps per day") + xlab("steps")
+h3 <- h3 + theme(axis.title = form_xlab1)
 h3 <- h3 + ylim(0, 14)
 h3 <- h3 +  theme(plot.title = element_text(lineheight=.8, face="bold"))
 h3 <- h3 + ggtitle(expression(atop(bold("Figure 3 - Total number of steps per day"), atop(italic("Distinguished by method for missing values"), ""))))
-plot(h3)
-```
-
-![](PA1_template_files/figure-html/Part 4.4.2-1.png) 
-
-```r
+#plot(h3)
 #setwd("C:/repos_github/coursera/repres")
 #ggsave(filename = "Histogram Number of Steps no missing values.pdf", plot = h1)
+
+
+dt_diffdaysNo0
+```
+
+```
+##    stepsum       date
+## 1:   10641 2012-10-01
+## 2:   10641 2012-10-08
+## 3:   10641 2012-11-01
+## 4:   10641 2012-11-04
+## 5:   10641 2012-11-09
+## 6:   10641 2012-11-10
+## 7:   10641 2012-11-14
+## 8:   10641 2012-11-30
 ```
 
 The previous table shows the sum of the steps that have been added to the data set due to missing values.The fact that the sum of **10641** is equal for all days reveals an interesting detail. It turns out that all dates with missing values, have missing values for all intervals, and that there is no missing interval for all dates contained in the data set. This means that it would not matter much if the imputing process replaced missing values for each and every interval, or for each date only. 
 
 It also means that it's not possible to add any particular value to the analysis by replacing missing values in this example. It would have made much more sense if the original dataset was missing observations for **some intervals** for some days. In this case, it would be possible to add to the value of the analysis, particularly if the same intervals were not missing accross very many days.
 
-This can be further illustrated by combining the two previous histograms in Figure 1 and Figure 2. Notice that the number of days in the previous table is 8, and that the sum of steps for each day is 10641. The histogram in Figure 3 shows an increase of  eight counts in the bin where 10641 is located. The value added to the analysis by including more dates with no observations, I would say is pretty close to zero.
+This can be further illustrated by combining the two previous histograms in Figure 1 and Figure 2 into a new histogram inFfigure 4. Notice that the number of days in the previous table is 8, and that the sum of steps for each day is 10641. The histogram in Figure 3 shows an increase of  eight counts in the bin where 10641 is located. The value added to the analysis by including more dates with no observations, I would say is pretty close to zero.
 
+
+```r
+plot(h3)
+```
+
+![](PA1_template_files/figure-html/Part 4.4.2 Plot-1.png) 
 
 ## 5 - Are there differences in activity patterns between weekdays and weekends?
 ### 5.1 - Create a new factor variable in the dataset with two levels
@@ -667,7 +672,8 @@ p3 <- p3 + facet_grid(dayofweek ~ .)
 p3 <- p3 + geom_text(aes(x = interval, y = steps, label = stepmax, group=NULL),data=dt_weekpatterns, hjust = -0.2)
 p3 <- p3 + geom_point(data=subset(dt_weekpatterns, !is.na(stepmax)), colour = "red")
 
-p3 <- p3 + ggtitle("Daily pattern by 5 minute interval - Weekdays vs Weekend") 
+p3 <- p3 + ggtitle("Figure 4 - Daily pattern by 5 minute interval - Weekdays vs Weekend")
+p3 <- p3 + theme(axis.title = form_xlab1)
 p3 <- p3 + theme(plot.title = element_text(lineheight=.8, face="bold"))
 
 p3 <- p3 + ylim(0, 260)
@@ -676,9 +682,31 @@ plot(p3)
 
 ![](PA1_template_files/figure-html/Part 5.2-1.png) 
 
-Comparing the pattern for average number of steps for each interval for weekdays versus weekends shows that the maximum number of steps is quite a bit lower and appears later in the day on weekends. In other words, you tend to get up later in the weekends and run around less. Sounds sweet.
+Comparing the pattern for average number of steps for each interval for weekdays versus weekends shows that the maximum number of steps is quite a bit lower and appears later in the day on weekends. In other words, you tend to get up later in the weekends and run around less. Sounds sweet. It is also apparent that the tendency to get moving earlier in the day is stronger on weekdays, with a sharp jump in activity around 5 o'clock. 
 
+Another interesting thing is that the weekday pattern flattens after the peak at 835, and that the following intervals have a lower step count than compared to the weekends. This becomes more apparent when the two lines are plotted against a common y axis in the figure that follows. Briefly put, the graph will show that, compared to weekends, you get up earlier in the morning and run around a lot more just after getting up. Then, you sit down and more or less stay in the chair before you get up and go to bed. In the weekends, you get up later, move less around just after getting up, but move around a lot more during the day. Which also sounds nice. Have a nice weekend!
 
+### 5.2 Extra - Combine panel plot in a single plot
+
+```r
+# Common plot for average steps per interval, distingueshed by day of week 
+p4 <- ggplot(dt_weekpatterns, aes(interval, steps, colour = dayofweek )) + geom_line()
+p4 <- p4 + theme_classic()
+# p4 <- p4 + facet_grid(dayofweek ~ .)
+
+p4 <- p4 + geom_text(aes(x = interval, y = steps, label = stepmax, group=NULL), data=dt_weekpatterns, hjust = -0.2)
+p4 <- p4 + geom_point(data=subset(dt_weekpatterns, !is.na(stepmax)), colour = "red")
+
+p4 <- p4 + ggtitle("Daily pattern by 5 minute interval - Weekdays vs Weekend")
+p4 <- p4 + theme(axis.title = form_xlab1)
+p4 <- p4 + theme(plot.title = element_text(lineheight=.8, face="bold"))
+p4 <- p4 + scale_color_manual(values=c("blue", "grey"))
+
+p4 <- p4 + ylim(0, 260)
+plot(p4)
+```
+
+![](PA1_template_files/figure-html/Part 5.2 Extra-1.png) 
 
 ```r
 #___1.0___  Make md file
