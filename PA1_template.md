@@ -276,7 +276,7 @@ The following figure shows a plot from the previous table.
 plot(p1)
 ```
 
-![plot of chunk Part 3.1 Plot](figure/Part 3.1 Plot-1.png) 
+![plot of chunk Part 3.1 Plot Daily Steps](figure/Part 3.1 Plot Daily Steps-1.png) 
 
 
 ### 3.2 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
@@ -461,7 +461,7 @@ Below is a histogram showing the distribution of steps after missing values have
 plot(h2)
 ```
 
-![plot of chunk Part 4.4.1](figure/Part 4.4.1-1.png) 
+![plot of chunk Part 4.4.1 Histogram Number of Steps no missing values](figure/Part 4.4.1 Histogram Number of Steps no missing values-1.png) 
 
 Comparing the histogram in figure 3 with the histogram in figure 1 shows that the imputed data set leads to an increased number of observations at the center of the distribution. Let us take a quick look at why this happens by taking the difference between each observation in the imputed data set and another table where all missing values are replaced by zero.
 
@@ -564,7 +564,7 @@ This can be further illustrated by combining the two previous histograms in Figu
 plot(h3)
 ```
 
-![plot of chunk Part 4.4.2 Plot](figure/Part 4.4.2 Plot-1.png) 
+![plot of chunk Part 4.4.2 Figure 3 - Total number of steps per day](figure/Part 4.4.2 Figure 3 - Total number of steps per day-1.png) 
 
 ## 5 - Are there differences in activity patterns between weekdays and weekends?
 ### 5.1 - Create a new factor variable in the dataset with two levels
@@ -717,7 +717,7 @@ p3 <- p3 + ylim(0, 260)
 plot(p3)
 ```
 
-![plot of chunk Part 5.2](figure/Part 5.2-1.png) 
+![plot of chunk Part 5.2 Panel Plot](figure/Part 5.2 Panel Plot-1.png) 
 
 Comparing the pattern for average number of steps for each interval for weekdays versus weekends shows that the maximum number of steps is quite a bit lower and appears later in the day on weekends. In other words, you tend to get up later in the weekends and run around less. Sounds sweet. It is also apparent that the tendency to get moving earlier in the day is stronger on weekdays, with a sharp jump in activity around 5 o'clock. 
 
@@ -743,7 +743,7 @@ p4 <- p4 + ylim(0, 260)
 plot(p4)
 ```
 
-![plot of chunk Part 5.2 Extra](figure/Part 5.2 Extra-1.png) 
+![plot of chunk Part 5.2 Extra Combine panel plot in a single plot](figure/Part 5.2 Extra Combine panel plot in a single plot-1.png) 
 
 ```r
 #___1.0___  Make md file

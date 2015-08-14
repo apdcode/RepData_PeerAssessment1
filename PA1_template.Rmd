@@ -162,7 +162,7 @@ tb1_methods
 ## 3 - What is the average daily pattern?
 ### 3.1 - Make a time series plot of the 5 minute intervals averaged accross all days.
 Again, it is convenent to transform the original data. Here, the data is stored as an average for each interval accross all observed days in the data table dt_dailypattern.
-```{r Part 3.1, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
+```{r Part 3.1 - Time Series, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 
 #___3.1___Make a time series plot 
 
@@ -217,7 +217,7 @@ dt_dailypattern
 ```
 
 The following figure shows a plot from the previous table.
-```{r Part 3.1 Plot, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
+```{r Part 3.1 Plot Daily Steps, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 plot(p1)
 ```
 
@@ -375,7 +375,7 @@ We can also see that the average and median number of steps decreases respective
 
 Below is a histogram showing the distribution of steps after missing values have been imputed.
 
-```{r Part 4.4.1, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
+```{r Part 4.4.1 Histogram Number of Steps no missing values, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 plot(h2)
 ```
 
@@ -464,7 +464,7 @@ It also means that it's not possible to add any particular value to the analysis
 
 This can be further illustrated by combining the two previous histograms in Figure 1 and Figure 2 into a new histogram inFfigure 4. Notice that the number of days in the previous table is 8, and that the sum of steps for each day is 10641. The histogram in Figure 3 shows an increase of  eight counts in the bin where 10641 is located. The value added to the analysis by including more dates with no observations, I would say is pretty close to zero.
 
-```{r Part 4.4.2 Plot, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
+```{r Part 4.4.2 Figure 3 - Total number of steps per day, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 plot(h3)
 ```
 
@@ -504,7 +504,7 @@ head(dt_imputed2, 5)
 The table above shows how the new variable is added to the imputed data set..
 
 ### 5.2 - Make a panel plot
-```{r Part 5.2, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
+```{r Part 5.2 Panel Plot, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 # Reset regional settings
 # Sys.setlocale("LC_TIME", "Norwegian")
 
@@ -609,7 +609,7 @@ Comparing the pattern for average number of steps for each interval for weekdays
 Another interesting thing is that the weekday pattern flattens after the peak at 835, and that the following intervals have a lower step count than compared to the weekends. This becomes more apparent when the two lines are plotted against a common y axis in the figure that follows. Briefly put, the graph will show that, compared to weekends, you get up earlier in the morning and run around a lot more just after getting up. Then, you sit down and more or less stay in the chair before you get up and go to bed. In the weekends, you get up later, move less around just after getting up, but move around a lot more during the day. Which also sounds nice. Have a nice weekend!
 
 ### 5.2 Extra - Combine panel plot in a single plot
-```{r Part 5.2 Extra, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
+```{r Part 5.2 Extra Combine panel plot in a single plot, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 
 # Common plot for average steps per interval, distingueshed by day of week 
 p4 <- ggplot(dt_weekpatterns, aes(interval, steps, colour = dayofweek )) + geom_line()
