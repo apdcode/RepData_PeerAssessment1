@@ -33,6 +33,15 @@ for(i in 1:length(pck_toload)) {
     library(pck_toload[i], character.only = TRUE)
 }
 remove(i)
+
+#___0.3___ SOme common standards for charts using ggplot 2
+# p.labs + theme(title = red.bold.italic.text, axis.title = red.bold.italic.text)
+yAxisFormat <- element_text(face = "bold.italic", color = "blue")
+xAxisFormat <- element_text(face = "bold.italic", color = "blue")
+titleFormat1 <- element_text(face = "bold.italic",lineheight=.8, color = "blue")
+
+
+
 ```
 
 
@@ -407,7 +416,7 @@ dt_diffdaysNo0 <- sqldf("SELECT stepsum, date
                       FROM dt_diffdays
                       Where stepsum <> 0
                       Group by date")
-dt_diffdaysNo0
+dt_diffdaysNo0 <- data.table(dt_diffdaysNo0)
 
 # UNION (dt_dailysteps + category = nonimputed) and (dt_dailysteps3 + category = imputed)
 FactImpNot <- 1:nrow(dt_dailysteps)
@@ -428,15 +437,21 @@ dt_dailyUnion <- (sqldf("SELECT * from dt_dailyStepsCat
                             ORDER BY date"))
 dt_dailyUnion <- data.table(dt_dailyUnion)
 
+# sum(dt_dailyStepsCat$stepsum)
+# sum(dt_dailySteps2Cat$stepsum)
+
 # Histogram of number of steps per day
-h2 <- ggplot(data=dt_dailyUnion, aes(dt_dailyUnion$steps, fill = NaTreatment))
+h3 <- ggplot(data=dt_dailyUnion, aes(dt_dailyUnion$steps, fill = NaTreatment))
 
 
-h2 <- h2 + geom_histogram()
-h2 <- h2 + theme_classic()
-h2 <- h2 + ggtitle("Figure 3 - Total number of steps per day") + xlab("steps")
-h2 <- h2 + ylim(0, 14)
-plot(h2)
+h3 <- h3 + geom_histogram(alpha = 0.3, colour = "blue", position="identity")
+h3 <- h3 + scale_fill_manual(values = c("black", "grey"))
+h3 <- h3 + theme_classic()
+h3 <- h3 + ggtitle("Figure 3 - Total number of steps per day") + xlab("steps")
+h3 <- h3 + ylim(0, 14)
+h3 <- h3 +  theme(plot.title = element_text(lineheight=.8, face="bold"))
+h3 <- h3 + ggtitle(expression(atop(bold("Figure 3 - Total number of steps per day"), atop(italic("Distinguished by method for missing values"), ""))))
+plot(h3)
 #setwd("C:/repos_github/coursera/repres")
 #ggsave(filename = "Histogram Number of Steps no missing values.pdf", plot = h1)
 
@@ -448,6 +463,8 @@ plot(h2)
 The previous table shows the sum of the steps that have been added to the data set due to missing values.The fact that the sum of **10641** is equal for all days reveals an interesting detail. It turns out that all dates with missing values, have missing values for all intervals, and that there is no missing interval for all dates contained in the data set. This means that it would not matter much if the imputing process replaced missing values for each and every interval, or for each date only. 
 
 It also means that it's not possible to add any particular value to the analysis by replacing missing values in this example. It would have made much more sense if the original dataset was missing observations for **some intervals** for some days. In this case, it would be possible to add to the value of the analysis, particularly if the same intervals were not missing accross very many days.
+
+This can be further illustrated by combining the two previous histograms in Figure 1 and Figure 2. Notice that the number of days in the previous table is 8, and that the sum of steps for each day is 10641. The histogram in Figure 3 shows an increase of  eight counts in the bin where 10641 is located. The value added to the analysis by including more dates with no observations, I would say is pretty close to zero.
 
 
 ## 5 - Are there differences in activity patterns between weekdays and weekends?
@@ -483,6 +500,7 @@ dt_imputed2 <- data.table(dt_imputed, dayofweek)
 # Take a look at the nwe data
 head(dt_imputed2, 5)
 ```
+The table above shows how the new variable is added to the imputed data set..
 
 ### 5.2 - Make a panel plot
 ```{r Part 5.2, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}

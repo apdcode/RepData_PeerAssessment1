@@ -1,12 +1,4 @@
----
-title: "Reproducible Research - Peer Assessment 1"
-header-includes: \usepackage{caption}
-output:
-  html_document:
-    keep_md: true
-  
-fig_caption: no
----
+# Reproducible Research - Peer Assessment 1
 
 
 
@@ -128,7 +120,7 @@ h1 <- h1 + ylim(0, 14)
 plot(h1)
 ```
 
-![plot of chunk Part 2.2 - Histogram](figure/Part 2.2 - Histogram-1.png) 
+![](PA1_template_files/figure-html/Part 2.2 - Histogram-1.png) 
 
 
 ### 2.3 - Calculate and report the mean and median of the total number of steps taken per day
@@ -248,7 +240,7 @@ The following figure shows a plot from the previous table.
 plot(p1)
 ```
 
-![plot of chunk Part 3.1 Plot](figure/Part 3.1 Plot-1.png) 
+![](PA1_template_files/figure-html/Part 3.1 Plot-1.png) 
 
 
 ### 3.2 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
@@ -432,7 +424,7 @@ Below is a histogram showing the distribution of steps after missing values have
 plot(h2)
 ```
 
-![plot of chunk Part 4.4.1](figure/Part 4.4.1-1.png) 
+![](PA1_template_files/figure-html/Part 4.4.1-1.png) 
 
 Comparing the histogram in figure 3 with the histogram in figure 1 shows that the imputed data set leads to an increased number of observations at the center of the distribution. Let us take a quick look at why this happens by taking the difference between each observation in the imputed data set and another table where all missing values are replaced by zero.
 
@@ -484,22 +476,8 @@ dt_diffdaysNo0 <- sqldf("SELECT stepsum, date
                       FROM dt_diffdays
                       Where stepsum <> 0
                       Group by date")
-dt_diffdaysNo0
-```
+dt_diffdaysNo0 <- data.table(dt_diffdaysNo0)
 
-```
-##   stepsum       date
-## 1   10641 2012-10-01
-## 2   10641 2012-10-08
-## 3   10641 2012-11-01
-## 4   10641 2012-11-04
-## 5   10641 2012-11-09
-## 6   10641 2012-11-10
-## 7   10641 2012-11-14
-## 8   10641 2012-11-30
-```
-
-```r
 # UNION (dt_dailysteps + category = nonimputed) and (dt_dailysteps3 + category = imputed)
 FactImpNot <- 1:nrow(dt_dailysteps)
 FactImp <- 1:nrow(dt_dailysteps2)
@@ -519,18 +497,24 @@ dt_dailyUnion <- (sqldf("SELECT * from dt_dailyStepsCat
                             ORDER BY date"))
 dt_dailyUnion <- data.table(dt_dailyUnion)
 
+# sum(dt_dailyStepsCat$stepsum)
+# sum(dt_dailySteps2Cat$stepsum)
+
 # Histogram of number of steps per day
-h2 <- ggplot(data=dt_dailyUnion, aes(dt_dailyUnion$steps, fill = NaTreatment))
+h3 <- ggplot(data=dt_dailyUnion, aes(dt_dailyUnion$steps, fill = NaTreatment))
 
 
-h2 <- h2 + geom_histogram()
-h2 <- h2 + theme_classic()
-h2 <- h2 + ggtitle("Figure 3 - Total number of steps per day") + xlab("steps")
-h2 <- h2 + ylim(0, 14)
-plot(h2)
+h3 <- h3 + geom_histogram(alpha = 0.3, colour = "blue", position="identity")
+h3 <- h3 + scale_fill_manual(values = c("black", "grey"))
+h3 <- h3 + theme_classic()
+h3 <- h3 + ggtitle("Figure 3 - Total number of steps per day") + xlab("steps")
+h3 <- h3 + ylim(0, 14)
+h3 <- h3 +  theme(plot.title = element_text(lineheight=.8, face="bold"))
+h3 <- h3 + ggtitle(expression(atop(bold("Figure 3 - Total number of steps per day"), atop(italic("Distinguished by method for missing values"), ""))))
+plot(h3)
 ```
 
-![plot of chunk Part 4.4.2](figure/Part 4.4.2-1.png) 
+![](PA1_template_files/figure-html/Part 4.4.2-1.png) 
 
 ```r
 #setwd("C:/repos_github/coursera/repres")
@@ -540,6 +524,8 @@ plot(h2)
 The previous table shows the sum of the steps that have been added to the data set due to missing values.The fact that the sum of **10641** is equal for all days reveals an interesting detail. It turns out that all dates with missing values, have missing values for all intervals, and that there is no missing interval for all dates contained in the data set. This means that it would not matter much if the imputing process replaced missing values for each and every interval, or for each date only. 
 
 It also means that it's not possible to add any particular value to the analysis by replacing missing values in this example. It would have made much more sense if the original dataset was missing observations for **some intervals** for some days. In this case, it would be possible to add to the value of the analysis, particularly if the same intervals were not missing accross very many days.
+
+This can be further illustrated by combining the two previous histograms in Figure 1 and Figure 2. Notice that the number of days in the previous table is 8, and that the sum of steps for each day is 10641. The histogram in Figure 3 shows an increase of  eight counts in the bin where 10641 is located. The value added to the analysis by including more dates with no observations, I would say is pretty close to zero.
 
 
 ## 5 - Are there differences in activity patterns between weekdays and weekends?
@@ -590,6 +576,7 @@ head(dt_imputed2, 5)
 ## 4:     0 2012-10-01       15   weekday
 ## 5:     0 2012-10-01       20   weekday
 ```
+The table above shows how the new variable is added to the imputed data set..
 
 ### 5.2 - Make a panel plot
 
@@ -687,7 +674,7 @@ p3 <- p3 + ylim(0, 260)
 plot(p3)
 ```
 
-![plot of chunk Part 5.2](figure/Part 5.2-1.png) 
+![](PA1_template_files/figure-html/Part 5.2-1.png) 
 
 Comparing the pattern for average number of steps for each interval for weekdays versus weekends shows that the maximum number of steps is quite a bit lower and appears later in the day on weekends. In other words, you tend to get up later in the weekends and run around less. Sounds sweet.
 
