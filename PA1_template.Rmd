@@ -598,10 +598,25 @@ plot(p3)
 
 ```
 
-Comparing the pattern for average number of steps for each interval for weekdays versus weekends shows that the maximum number of steps is quite a bit lower and appears later in the day on weekends. In other words, you tend to get up later in the weekends and run around less. Sounds sweet. It is also apparent that the tendency to geat moving earlier in the day is stronger on weekdays, with a sharp jump in activity around 5 o'clock. Another interesting thing is that the weekday pattern flattens after the peak at 835, and that the following intervals have a lower step count then compared to the weekends. This becomes much clearer when the two lines are plotted agains a common y axis in the figure that follows.
+Comparing the pattern for average number of steps for each interval for weekdays versus weekends shows that the maximum number of steps is quite a bit lower and appears later in the day on weekends. In other words, you tend to get up later in the weekends and run around less. Sounds sweet. It is also apparent that the tendency to get moving earlier in the day is stronger on weekdays, with a sharp jump in activity around 5 o'clock. Another interesting thing is that the weekday pattern flattens after the peak at 835, and that the following intervals have a lower step count than compared to the weekends. This becomes much clearer when the two lines are plotted agains a common y axis in the figure that follows. Briefly put, the graph will show that, compared to weekends, you get up earlier in the morning and run around a lot more just after getting up. Then, you sitdown and more or less stay in the chair before you get up and go to bed. In the weekends, you get up later, move less around just after getting up, but move around a lot more during the day. Which also sounds nice. Have a nice weekend!
 
+### 5.2 Extra - Combine panel plot in a single plot
+```{r Part 5.2 Extra, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
 
-```{r Extras, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
+# Common plot for average steps per interval, distingueshed by day of week 
+p3 <- ggplot(dt_weekpatterns, aes(interval, steps, colour = dayofweek )) + geom_line()
+p3 <- p3 + theme_classic()
+# p3 <- p3 + facet_grid(dayofweek ~ .)
+
+p3 <- p3 + geom_text(aes(x = interval, y = steps, label = stepmax, group=NULL),data=dt_weekpatterns, hjust = -0.2)
+p3 <- p3 + geom_point(data=subset(dt_weekpatterns, !is.na(stepmax)), colour = "red")
+
+p3 <- p3 + ggtitle("Daily pattern by 5 minute interval - Weekdays vs Weekend") 
+p3 <- p3 + theme(plot.title = element_text(lineheight=.8, face="bold"))
+
+p3 <- p3 + ylim(0, 260)
+plot(p3)
+
 
 #___1.0___  Make md file
 #setwd("C:/repos_github/coursera/RepData_PeerAssessment1")
