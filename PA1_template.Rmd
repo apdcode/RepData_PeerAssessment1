@@ -8,18 +8,16 @@ output:
 fig_caption: no
 ---
 
-```{r Settings, echo = FALSE, eval = TRUE, results = "hide", warning = FALSE, message = FALSE}
+### Some initial R settings, packages and formatting
+```{r Settings, echo = TRUE, eval = TRUE, results = "hide", warning = FALSE, message = FALSE}
 
 #___0.1___Clear workspace
 rm(list=ls())
 
-# Table settings
+#___0.2___Tables
 # \captionsetup[table]{labelformat=empty}
 
-# List loaded packages
-# (.packages())
-
-#___0.2___Load packages
+#___0.3___Load packages
 # Packages loaded
 pck_loaded <- (.packages())
 
@@ -34,20 +32,18 @@ for(i in 1:length(pck_toload)) {
 }
 remove(i)
 
-#___0.3___ SOme common standards for charts using ggplot 2
-# p.labs + theme(title = red.bold.italic.text, axis.title = red.bold.italic.text)
+#___0.4___ SOme common standards for charts using ggplot 2
 
 form_xlab1 <- element_text(face = "italic", color = "blue")
 form_title1 <- element_text(face = "bold",lineheight=.8)
-
-
 ```
 
 
 ## Part 1 - Loading and preprocessing the data
 
 ### 1.1 - Load the data
-The data is loaded into a data table using **read.table** and **data.table**
+The data is loaded into a data table using **read.table** and **data.table**.
+
 The following chunk shows how it's done.
 ```{r Part 1, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE}
 
@@ -103,16 +99,12 @@ grandtotalobs <- nrow(dt_initialNaNo)
 
 rows_dt_dailysteps <- nrow(dt_dailysteps)
 remove(dt_dailystepsDT)
+head(dt_dailysteps, 5)
 ```
-
 
 
 There's a total of **`r grandtotalsteps`** steps recorded accross  **`r grandtotalobs`** observations in the original dataset after accounting for missing values. Ordering the sum of steps for all intervals per day results in a table with **`r rows_dt_dailysteps`** records
-The following table displays the first 5 rows with the total number of steps per day displayed in the column named stepsum. This table is the basis for the histogram that follows in Figure 1.
-
-```{r Part 2.1.1, echo = TRUE, eval = TRUE, results = "show", warning = FALSE, message = FALSE, fig.width = 12, fig.height = 8}
-head(dt_dailysteps, 5)
-```
+The previous table displays the first 5 rows with the total number of steps per day displayed in the column named stepsum. This table is the basis for the histogram that follows in Figure 1.
 
 
 ### 2.2 - Make a histogram of the total number of steps taken each day
@@ -352,7 +344,7 @@ medstepsNaNo <- median(dt_dailysteps$steps)
 h2 <- ggplot(data=dt_dailysteps2, aes(dt_dailysteps2$steps))
 h2 <- h2 + geom_histogram(colour = "blue", fill = "grey")
 h2 <- h2 + theme_classic()
-h2 <- h2 + ggtitle(" Figure 2 - Total number of steps per day") + xlab("steps")
+h2 <- h2 + ggtitle(" Figure 3 - Total number of steps per day") + xlab("steps")
 h2 <- h2 + theme(axis.title = form_xlab1)
 h2 <- h2 + ylim(0, 14)
 #plot(h2)
@@ -456,6 +448,7 @@ h3 <- h3 + theme(axis.title = form_xlab1)
 h3 <- h3 + ylim(0, 14)
 h3 <- h3 +  theme(plot.title = element_text(lineheight=.8, face="bold"))
 h3 <- h3 + ggtitle(expression(atop(bold("Figure 3 - Total number of steps per day"), atop(italic("Distinguished by method for missing values"), ""))))
+
 #plot(h3)
 #setwd("C:/repos_github/coursera/repres")
 #ggsave(filename = "Histogram Number of Steps no missing values.pdf", plot = h1)
@@ -599,6 +592,10 @@ p3 <- p3 + geom_text(aes(x = interval, y = steps, label = stepmax, group=NULL),d
 p3 <- p3 + geom_point(data=subset(dt_weekpatterns, !is.na(stepmax)), colour = "red")
 
 p3 <- p3 + ggtitle("Figure 4 - Daily pattern by 5 minute interval - Weekdays vs Weekend")
+
+p3 <- p3 + ggtitle(expression(atop(bold("Figure 4 - Daily pattern by 5 minute interval"), atop(italic("Weekdays Vs. Weekends"), ""))))
+
+
 p3 <- p3 + theme(axis.title = form_xlab1)
 p3 <- p3 + theme(plot.title = element_text(lineheight=.8, face="bold"))
 
